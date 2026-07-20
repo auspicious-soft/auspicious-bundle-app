@@ -1,11 +1,15 @@
-import { PrismaClient } from "@prisma/client";
+import { MongoClient } from "mongodb";
 
-if (process.env.NODE_ENV !== "production") {
-  if (!global.prismaGlobal) {
-    global.prismaGlobal = new PrismaClient();
+const client = new MongoClient(process.env.MONGODB_URI);
+
+let db;
+
+export async function getDB() {
+  if (!db) {
+    await client.connect();
+    db = client.db(process.env.MONGODB_DB_NAME);
+    
   }
+
+  return db;
 }
-
-const prisma = global.prismaGlobal ?? new PrismaClient();
-
-export default prisma;

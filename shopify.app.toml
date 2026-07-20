@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "237ff610ab8dfd2f10aeb63827383865"
-name = "auspicious-bundle-app"
+name = "Auspicious Bundle"
 application_url = "https://example.com"
 embedded = true
 
