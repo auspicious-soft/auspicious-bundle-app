@@ -3,11 +3,23 @@ import { useFetcher } from "react-router";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
+import { useLoaderData } from "react-router";
 
 export const loader = async ({ request }) => {
-  await authenticate.admin(request);
+  const { session } = await authenticate.admin(request);
 
-  return null;
+  const shopHandle = session.shop.replace(".myshopify.com", "");
+
+  const apiKey = "237ff610ab8dfd2f10aeb63827383865";
+  const embedHandle = "bundles";
+
+  const themeEditorUrl =
+    `https://admin.shopify.com/store/${shopHandle}/themes/current/editor` +
+    `?context=apps` +
+    `&template=product` +
+    `&activateAppId=${apiKey}/${embedHandle}`;
+
+  return { themeEditorUrl };
 };
 
 export const action = async ({ request }) => {
@@ -76,36 +88,25 @@ export const action = async ({ request }) => {
 };
 
 export default function Index() {
-  const fetcher = useFetcher();
-  const shopify = useAppBridge();
-  const isLoading =
-    ["loading", "submitting"].includes(fetcher.state) &&
-    fetcher.formMethod === "POST";
-
-  useEffect(() => {
-    if (fetcher.data?.product?.id) {
-      shopify.toast.show("Product created");
-    }
-  }, [fetcher.data?.product?.id, shopify]);
-  const generateProduct = () => fetcher.submit({}, { method: "POST" });
+  const { themeEditorUrl } = useLoaderData();
 
   return (
-    <s-page heading="Shopify app template">      
+    <s-page heading="Shopify app template">
       <s-section heading="Congrats on creating a new Shopify app 🎉">
         <s-paragraph>
           Enable the app from Shopify theme editor{" "}
           <s-link
-            href="https://shopify.dev/docs/apps/tools/app-bridge"
+            href={themeEditorUrl}
             target="_blank"
+            rel="noopener noreferrer"
           >
-            App Bridge
+            Enable App Embed
           </s-link>
         </s-paragraph>
-      </s-section>      
+      </s-section>
     </s-page>
   );
 }
-
 export const headers = (headersArgs) => {
   return boundary.headers(headersArgs);
 };
