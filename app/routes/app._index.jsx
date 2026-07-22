@@ -15,7 +15,8 @@ import {
   TextField,
   IndexFilters,
   useSetIndexFiltersMode,
-  InlineStack 
+  InlineStack,
+  Checkbox
 } from "@shopify/polaris";
 
 
@@ -138,51 +139,69 @@ export default function Index() {
       </IndexTable.Cell>
 
       <IndexTable.Cell>
-        <Button size="slim">Edit</Button>
-      </IndexTable.Cell>
+        <InlineStack  gap="400" blockAlign="center">
+          <s-switch
+            checked={item.status}
+            onChange={(e) =>
+              toggleStatus(item.id, e.target.checked)
+            }
+          ></s-switch>
 
-      <IndexTable.Cell>
-        <Button tone="critical" size="slim">
-          Delete
-        </Button>
-      </IndexTable.Cell>
+          <s-button commandfor=":r34:" icon="menu-horizontal" variant="tertiary" accessibilitylabel="More actions"></s-button>
+          <s-menu id=":r34:"><s-button icon="duplicate">Duplicate</s-button><s-button icon="delete" tone="critical">Remove</s-button></s-menu>
+        </InlineStack>
+      </IndexTable.Cell>      
     </IndexTable.Row>
   ));
 
   return (
     <Page>
       <BlockStack gap="400">
-      <Card>
-        <Text as="h2" variant="headingMd">
-          Congrats on installing the Auspicious Bundle App 🎉
-        </Text>
+        <Card>
+          <BlockStack gap="400">
+            {/* <Text as="h2" variant="headingMd">
+              Congrats on installing the Auspicious Bundle App 🎉
+            </Text> */}
 
-        <p style={{ marginBottom: "20px" }}>
-          Enable app from the theme editor { }
-          <a
-            href={themeEditorUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Enable App
-          </a>
-        </p>
+            <Text as="h2" variant="headingMd">
+              Enable Store Widget
+            </Text>
+
+            <InlineStack  gap="400" blockAlign="center">
+              <span>
+                To activate the Auspicious Bundles app, enable the Auspicious Bundles app button.
+              </span>
+
+              <Button
+                url={themeEditorUrl}
+                target="_blank"
+                variant="secondary"
+              >
+                Enable Store Widget
+              </Button>
+            </InlineStack>
+          </BlockStack>
         </Card>
 
         <Card>
-        <Text as="h2" variant="headingMd">
-          Create Bundles
-        </Text>
+          <BlockStack gap="400">
+            <Text as="h2" variant="headingMd">
+              Create Bundles
+            </Text>
 
-        <p style={{ marginBottom: "20px" }}>
-          Create bundle to display on the product page {" "}
-          <a
-            href="#"
-            rel="noopener noreferrer"
-          >
-            Create Bundle
-          </a>
-        </p>
+            <InlineStack  gap="400" blockAlign="center">
+              <span>
+                Create bundle to display on the product page.
+              </span>
+
+              <Button
+                url="#"
+                variant="secondary"
+              >
+                Create Bundle
+              </Button>
+            </InlineStack>            
+          </BlockStack>
         </Card>
 
         <Card>
@@ -234,8 +253,7 @@ export default function Index() {
               headings={[
                 { title: "Type Name" },
                 { title: "Status" },
-                { title: "Edit" },
-                { title: "Delete" },
+                { title: "Action" }                
               ]}
             >
               {rowMarkup}
