@@ -16,8 +16,11 @@ import {
   IndexFilters,
   useSetIndexFiltersMode,
   InlineStack,
-  Checkbox
+  Checkbox,
+  useIndexResourceState,
 } from "@shopify/polaris";
+
+import { ChevronRightIcon, ChevronDownIcon } from "@shopify/polaris-icons";
 
 
 export const loader = async ({ request }) => {
@@ -71,6 +74,15 @@ export default function Index() {
 
   const [selectedTab, setSelectedTab] = useState(0);
 
+  const [expandedRows, setExpandedRows] = useState({});
+
+  const toggleRow = (id) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
   const sortOptions = [
     { label: "Bundle Name (A-Z)", value: "name asc" },
     { label: "Bundle Name (Z-A)", value: "name desc" },
@@ -111,7 +123,7 @@ export default function Index() {
     return matchSearch;
   });
 
-  const totalPages = Math.ceil(
+    const totalPages = Math.ceil(
     filteredBundleTypes.length / pageSize
   );
 
@@ -120,16 +132,35 @@ export default function Index() {
     currentPage * pageSize
   );
 
+  const {
+    selectedResources,
+    allResourcesSelected,
+    handleSelectionChange,
+  } = useIndexResourceState(paginatedData);
+
   const rowMarkup = paginatedData.map((item, index) => (
     <IndexTable.Row
       id={item.id}
       key={item.id}
       position={index}
+      selected={selectedResources.includes(item.id)}      
     >
       <IndexTable.Cell>
-        <Text as="span" fontWeight="medium">
-          {item.type_name}
-        </Text>
+        <InlineStack gap="200" blockAlign="center">
+          <Button
+            variant="plain"
+            icon={expandedRows[item.id] ? ChevronDownIcon : ChevronRightIcon}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleRow(item.id);
+            }}
+            accessibilityLabel="Expand row"
+          />
+
+          <Text as="span" fontWeight="medium">
+            {item.type_name}
+          </Text>
+        </InlineStack>
       </IndexTable.Cell>
 
       <IndexTable.Cell>
@@ -140,15 +171,35 @@ export default function Index() {
 
       <IndexTable.Cell>
         <InlineStack  gap="400" blockAlign="center">
-          <s-switch
-            checked={item.status}
-            onChange={(e) =>
-              toggleStatus(item.id, e.target.checked)
-            }
-          ></s-switch>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <s-switch
+              checked={item.status}
+              onChange={(e) => {
+                toggleStatus(item.id, e.target.checked);
+              }}
+            ></s-switch>
+          </div>
 
-          <s-button commandfor=":r34:" icon="menu-horizontal" variant="tertiary" accessibilitylabel="More actions"></s-button>
-          <s-menu id=":r34:"><s-button icon="duplicate">Duplicate</s-button><s-button icon="delete" tone="critical">Remove</s-button></s-menu>
+          <div
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <s-button
+              commandfor={`menu-${item.id}`}
+              icon="menu-horizontal"
+              variant="tertiary"
+              accessibilitylabel="More actions"
+            ></s-button>
+
+            <s-menu id={`menu-${item.id}`}>
+              <s-button icon="duplicate">Duplicate</s-button>
+              <s-button icon="delete" tone="critical">Remove</s-button>
+            </s-menu>
+          </div>
         </InlineStack>
       </IndexTable.Cell>      
     </IndexTable.Row>
@@ -219,10 +270,10 @@ export default function Index() {
               // sortSelected={sortSelected}
               // onSort={setSortSelected}
               queryValue={searchValue}
-              queryPlaceholder="Search bundle types"
+              queryPlaceholder="Search bundle types"              
               onQueryChange={(value) => {
                 setSearchValue(value);
-                setCurrentPage(1);
+                setCurrentPage(1);                
               }}
               onQueryClear={() => setSearchValue("")}
               tabs={tabs}
@@ -242,14 +293,29 @@ export default function Index() {
                 disabled: false,
                 loading: false,
               }}
-            />
+            />      
+              
             <IndexTable
               resourceName={{
                 singular: "Bundle Type",
                 plural: "Bundle Types",
               }}
               itemCount={filteredBundleTypes.length}
-              selectable={false}
+              selectedItemsCount={
+                allResourcesSelected
+                  ? "All"
+                  : selectedResources.length
+              }
+              onSelectionChange={handleSelectionChange}
+              promotedBulkActions={[
+                {
+                  destructive: true,
+                  content: "Delete",
+                  onAction: () => {
+                    console.log(selectedResources);
+                  },
+                },
+              ]}              
               headings={[
                 { title: "Type Name" },
                 { title: "Status" },
