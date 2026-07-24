@@ -48,21 +48,29 @@ export default function Index() {
       id: "1",
       type_name: "Frequently Bought Together",
       status: true,
+      children: [
+        { id: "1-1", name: "1 Deck" },
+        { id: "1-2", name: "2 Decks" },
+        { id: "1-3", name: "3 Decks" },
+      ],
     },
     {
       id: "2",
       type_name: "Volume Discount",
       status: true,
+      children: [],
     },
     {
       id: "3",
       type_name: "Mix & Match",
       status: false,
+      children: [],
     },
     {
       id: "4",
       type_name: "Product Bundle",
       status: true,
+      children: [],
     },
   ];
 
@@ -138,72 +146,179 @@ export default function Index() {
     handleSelectionChange,
   } = useIndexResourceState(paginatedData);
 
-  const rowMarkup = paginatedData.map((item, index) => (
-    <IndexTable.Row
-      id={item.id}
-      key={item.id}
-      position={index}
-      selected={selectedResources.includes(item.id)}      
-    >
-      <IndexTable.Cell>
-        <InlineStack gap="200" blockAlign="center">
-          <Button
-            variant="plain"
-            icon={expandedRows[item.id] ? ChevronDownIcon : ChevronRightIcon}
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleRow(item.id);
-            }}
-            accessibilityLabel="Expand row"
-          />
+  // const rowMarkup = paginatedData.map((item, index) => (
+  //   <IndexTable.Row
+  //     id={item.id}
+  //     key={item.id}
+  //     position={index}
+  //     selected={selectedResources.includes(item.id)}      
+  //   >
+  //     <IndexTable.Cell>
+  //       <InlineStack gap="200" blockAlign="center">
+  //         <Button
+  //           variant="plain"
+  //           icon={expandedRows[item.id] ? ChevronDownIcon : ChevronRightIcon}
+  //           onClick={(e) => {
+  //             e.stopPropagation();
+  //             toggleRow(item.id);
+  //           }}
+  //           accessibilityLabel="Expand row"
+  //         />
 
-          <Text as="span" fontWeight="medium">
-            {item.type_name}
-          </Text>
-        </InlineStack>
-      </IndexTable.Cell>
+  //         <Text as="span" fontWeight="medium">
+  //           {item.type_name}
+  //         </Text>
+  //       </InlineStack>
+  //     </IndexTable.Cell>
 
-      <IndexTable.Cell>
-        <Badge tone={item.status ? "success" : "critical"}>
-          {item.status ? "Active" : "Inactive"}
-        </Badge>
-      </IndexTable.Cell>
+  //     <IndexTable.Cell>
+  //       <Badge tone={item.status ? "success" : "critical"}>
+  //         {item.status ? "Active" : "Inactive"}
+  //       </Badge>
+  //     </IndexTable.Cell>
 
-      <IndexTable.Cell>
-        <InlineStack  gap="400" blockAlign="center">
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <s-switch
-              checked={item.status}
-              onChange={(e) => {
-                toggleStatus(item.id, e.target.checked);
+  //     <IndexTable.Cell>
+  //       <InlineStack  gap="400" blockAlign="center">
+  //         <div
+  //           onClick={(e) => {
+  //             e.stopPropagation();
+  //           }}
+  //         >
+  //           <s-switch
+  //             checked={item.status}
+  //             onChange={(e) => {
+  //               toggleStatus(item.id, e.target.checked);
+  //             }}
+  //           ></s-switch>
+  //         </div>
+
+  //         <div
+  //           onPointerDown={(e) => e.stopPropagation()}
+  //           onClick={(e) => e.stopPropagation()}
+  //         >
+  //           <s-button
+  //             commandfor={`menu-${item.id}`}
+  //             icon="menu-horizontal"
+  //             variant="tertiary"
+  //             accessibilitylabel="More actions"
+  //           ></s-button>
+
+  //           <s-menu id={`menu-${item.id}`}>
+  //             <s-button icon="duplicate">Duplicate</s-button>
+  //             <s-button icon="delete" tone="critical">Remove</s-button>
+  //           </s-menu>
+  //         </div>
+  //       </InlineStack>
+  //     </IndexTable.Cell>      
+  //   </IndexTable.Row>
+  // ));
+
+  const rowMarkup = paginatedData.flatMap((item, index) => {
+    const rows = [];
+
+    // Parent Row
+    rows.push(
+      <IndexTable.Row
+        id={item.id}
+        key={item.id}
+        position={index}
+        selected={selectedResources.includes(item.id)}
+      >
+        <IndexTable.Cell>
+          <InlineStack gap="200" blockAlign="center">
+            <Button
+              variant="plain"
+              icon={
+                expandedRows[item.id]
+                  ? ChevronDownIcon
+                  : ChevronRightIcon
+              }
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleRow(item.id);
               }}
-            ></s-switch>
-          </div>
+              accessibilityLabel="Expand row"
+            />
 
-          <div
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
+            <Text as="span" fontWeight="medium">
+              {item.type_name}
+            </Text>
+          </InlineStack>
+        </IndexTable.Cell>
+
+        <IndexTable.Cell>
+          <Badge tone={item.status ? "success" : "critical"}>
+            {item.status ? "Active" : "Inactive"}
+          </Badge>
+        </IndexTable.Cell>
+
+        <IndexTable.Cell>
+          <InlineStack gap="400" blockAlign="center">
+            <div
+              onClick={(e) => e.stopPropagation()}
+            >
+              <s-switch
+                checked={item.status}
+                onChange={(e) =>
+                  toggleStatus(item.id, e.target.checked)
+                }
+              />
+            </div>
+
+            <div
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <s-button
+                commandfor={`menu-${item.id}`}
+                icon="menu-horizontal"
+                variant="tertiary"
+                accessibilitylabel="More actions"
+              />
+
+              <s-menu id={`menu-${item.id}`}>
+                <s-button icon="duplicate">Duplicate</s-button>
+                <s-button icon="delete" tone="critical">
+                  Remove
+                </s-button>
+              </s-menu>
+            </div>
+          </InlineStack>
+        </IndexTable.Cell>
+      </IndexTable.Row>
+    );
+
+    // Child Rows
+    if (expandedRows[item.id]) {
+      item.children.forEach((child) => {
+        rows.push(
+          <tr
+            key={child.id}
+            className="Polaris-IndexTable__TableRow Polaris-IndexTable__TableRow--child Polaris-IndexTable__TableRow--unclickable Polaris-IndexTable--toneSubdued"
           >
-            <s-button
-              commandfor={`menu-${item.id}`}
-              icon="menu-horizontal"
-              variant="tertiary"
-              accessibilitylabel="More actions"
-            ></s-button>
+            <td className="Polaris-IndexTable__TableCell"></td>
 
-            <s-menu id={`menu-${item.id}`}>
-              <s-button icon="duplicate">Duplicate</s-button>
-              <s-button icon="delete" tone="critical">Remove</s-button>
-            </s-menu>
-          </div>
-        </InlineStack>
-      </IndexTable.Cell>      
-    </IndexTable.Row>
-  ));
+            <td className="Polaris-IndexTable__TableCell">
+              <div
+                style={{
+                  paddingLeft: "32px",
+                  fontWeight: 500,
+                }}
+              >
+                {child.name}
+              </div>
+            </td>
+
+            <td className="Polaris-IndexTable__TableCell"></td>
+
+            <td className="Polaris-IndexTable__TableCell"></td>
+          </tr>
+        );
+      });
+    }
+
+    return rows;
+  });
 
   return (
     <Page>
@@ -246,7 +361,7 @@ export default function Index() {
               </span>
 
               <Button
-                url="#"
+                url="app/templates"
                 variant="secondary"
               >
                 Create Bundle
