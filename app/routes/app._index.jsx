@@ -2,6 +2,7 @@ import { useLoaderData } from "react-router";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import {
   Page,
@@ -42,6 +43,8 @@ export const loader = async ({ request }) => {
 
 export default function Index() {
   const { themeEditorUrl } = useLoaderData();
+
+  const navigate = useNavigate();
 
   const bundleTypes = [
     {
@@ -338,8 +341,8 @@ export default function Index() {
                 To activate the Auspicious Bundles app, enable the Auspicious Bundles app button.
               </span>
 
-              <Button
-                url={themeEditorUrl}
+              <Button  
+                url={themeEditorUrl}              
                 target="_blank"
                 variant="secondary"
               >
@@ -361,7 +364,7 @@ export default function Index() {
               </span>
 
               <Button
-                url="app/templates"
+                onClick={() => navigate("/app/templates")}
                 variant="secondary"
               >
                 Create Bundle
@@ -376,7 +379,7 @@ export default function Index() {
               <Text as="h2" variant="headingMd">
                 Bundles
               </Text>
-              <Button variant="primary">
+              <Button variant="primary" onClick={() => navigate("/app/templates")}>
                 Create Bundle
               </Button>
             </InlineStack>
