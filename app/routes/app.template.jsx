@@ -14,6 +14,7 @@ import {
 import { ArrowLeftIcon } from "@shopify/polaris-icons";
 
 import TemplateGrid from "../components/TemplateGrid";
+import ProductPickerModal from "../components/common/ProductPickerModal";
 
 const colors = [
   "#000000",
@@ -39,6 +40,7 @@ const templates = [
         title: "Single",
         subtitle: "Standard price",
         price: 20,
+        variantName: "",
       },
       {
         id: 2,
@@ -48,10 +50,10 @@ const templates = [
         price: 34,
         comparePrice: 40,
         popular: true,
-
+        variantName: "Color",
         variants: [
-          { label: "Black", value: "black" },
-          { label: "Blue", value: "blue" },
+          { label: "Black", value: "black"},
+          { label: "Blue", value: "blue"},
           { label: "Red", value: "red" },
         ],
       },
@@ -80,6 +82,7 @@ const templates = [
         badge: "SAVE 60%",
         price: 40,
         comparePrice: 100,
+        freeGift: true
       },
     ],
   },
@@ -95,6 +98,14 @@ const templates = [
         id: 1,
         title: "1 Pack",
         price: 20,
+        product: {
+          title: "Basic T-Shirt",
+          image: "https://picsum.photos/80",
+          variants: [
+            { label: "Black", value: "black" },
+            { label: "Blue", value: "blue" },
+          ],
+        }
       },
       {
         id: 2,
@@ -116,6 +127,29 @@ const templates = [
   },
 ];
 
+const availableProducts = [
+  {
+    id: 1,
+    title: "Lithuania Tie-Dye T-shirt",
+    image: "https://picsum.photos/100?1",
+    price: 17,
+    variants: [
+      { label: "Black", value: "black" },
+      { label: "Green", value: "green" },
+    ],
+  },
+  {
+    id: 2,
+    title: "Nirvana T-shirt",
+    image: "https://picsum.photos/100?2",
+    price: 17,
+    variants: [
+      { label: "Black", value: "black" },
+      { label: "Red", value: "red" },
+    ],
+  },
+];
+
 export default function Templates() {
   const navigate = useNavigate();
 
@@ -132,6 +166,70 @@ export default function Templates() {
       ...prev,
       [templateId]: optionId,
     }));
+  };
+
+  const [bundleConfig, setBundleConfig] = useState({});
+
+  console.log("Bundle Config:", bundleConfig);
+
+  const updateBundleConfig = (
+    templateId,
+    optionId,
+    field,
+    value
+  ) => {
+    setBundleConfig((prev) => ({
+      ...prev,
+      [templateId]: {
+        ...prev[templateId],
+        [optionId]: {
+          ...prev[templateId]?.[optionId],
+          [field]: value,
+        },
+      },
+    }));
+  };
+
+  const [productPicker, setProductPicker] = useState({
+    open: false,
+    templateId: null,
+    optionId: null,
+  });
+
+  const openProductPicker = (templateId, optionId) => {
+    setProductPicker({
+      open: true,
+      templateId,
+      optionId,
+    });
+  };
+
+  const closeProductPicker = () => {
+    setProductPicker({
+      open: false,
+      templateId: null,
+      optionId: null,
+    });
+  };
+
+  const handleChooseProduct = (product) => {
+    updateBundleConfig(
+      productPicker.templateId,
+      productPicker.optionId,
+      "secondProduct",
+      product
+    );
+
+    closeProductPicker();
+  };
+
+  const handleRemoveSecondProduct = (templateId, optionId) => {
+    updateBundleConfig(
+      templateId,
+      optionId,
+      "secondProduct",
+      null
+    );
   };
 
   return (
@@ -202,6 +300,16 @@ export default function Templates() {
           templates={templates}
           selectedOptions={selectedOptions}
           onSelect={handleSelect}
+          bundleConfig={bundleConfig}
+          updateBundleConfig={updateBundleConfig}
+          openProductPicker={openProductPicker}
+        />
+
+        <ProductPickerModal
+          open={productPicker.open}
+          onClose={closeProductPicker}
+          products={availableProducts}
+          onChoose={handleChooseProduct}
         />
 
       </BlockStack>

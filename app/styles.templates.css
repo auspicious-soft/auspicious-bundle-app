@@ -50,6 +50,49 @@
     right:-10px;
 }
 
+.Polaris-InlineGrid > * {
+  height: 100%;
+}
+
+.Polaris-ShadowBevel {
+  height: 100%;
+}
+
+.template-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 450px; /* Adjust if needed */
+}
+
+.template-content {
+  flex: 1;
+}
+
+.template-footer {
+  margin-top: 8px;
+}
+
+.option-card {
+  position: relative;
+  border: 1px solid #dfe3e8;
+  border-radius: 14px;
+  padding: 16px;
+  transition: all .2s ease;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.option-card.active {
+  border: 2px solid #7c3aed;
+}
+
+.option-extra {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f1f1;
+}
+
 @media (max-width: 768px) {
   .template-header {
     flex-direction: column;

@@ -364,7 +364,7 @@ export default function Index() {
               </span>
 
               <Button
-                onClick={() => navigate("/app/templates")}
+                onClick={() => navigate("/app/template")}
                 variant="secondary"
               >
                 Create Bundle
@@ -379,7 +379,7 @@ export default function Index() {
               <Text as="h2" variant="headingMd">
                 Bundles
               </Text>
-              <Button variant="primary" onClick={() => navigate("/app/templates")}>
+              <Button variant="primary" onClick={() => navigate("/app/template")}>
                 Create Bundle
               </Button>
             </InlineStack>

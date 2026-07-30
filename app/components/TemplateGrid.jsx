@@ -8,6 +8,9 @@ export default function TemplateGrid({
   templates,
   selectedOptions,
   onSelect,
+  bundleConfig,
+  updateBundleConfig,
+  openProductPicker
 }) {
   return (
     <InlineGrid
@@ -17,6 +20,7 @@ export default function TemplateGrid({
         md: 3,
       }}
       gap="400"
+      alignItems="stretch"
     >
       {templates.map((template) => {
         const props = {
@@ -24,6 +28,9 @@ export default function TemplateGrid({
           template,
           selected: selectedOptions[template.id],
           onSelect,
+          bundleConfig,
+          updateBundleConfig,
+          openProductPicker
         };
 
         switch (template.type) {
