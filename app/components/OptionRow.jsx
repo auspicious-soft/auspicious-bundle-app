@@ -1,13 +1,13 @@
 import {
   InlineStack,
   BlockStack,
-  Text,
-  Badge,
+  Text, 
   RadioButton,
 } from "@shopify/polaris";
 
 import Price from "./common/Price";
 import PopularRibbon from "./common/PopularRibbon";
+import Label from "./common/Label";
 
 export default function OptionRow({
   option,
@@ -28,13 +28,11 @@ export default function OptionRow({
         gap="300"
       >
         <InlineStack gap="300" blockAlign="start">
-          <RadioButton
-            checked={active}
-            label=""
-            onChange={onClick}
-          />
+          <div className={`custom-radio ${active ? "active" : ""}`}>
+            <div className="custom-radio-dot" />
+          </div>
 
-          <BlockStack gap="100">
+          <BlockStack gap="200">
             <InlineStack gap="200" blockAlign="center">
               <Text
                 as="span"
@@ -45,9 +43,9 @@ export default function OptionRow({
               </Text>
 
               {option.badge && (
-                <Badge tone="success">
+                <Label>
                   {option.badge}
-                </Badge>
+                </Label>
               )}
             </InlineStack>
 

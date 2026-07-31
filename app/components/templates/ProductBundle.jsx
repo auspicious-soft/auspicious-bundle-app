@@ -22,7 +22,7 @@ export default function ProductBundle({
     <Card roundedAbove="sm">
       <div className="template-card">
         <div className="template-content">
-          <BlockStack gap="400">
+          <BlockStack gap="200">
             {/* Header */}
             <BlockStack gap="100">
               <Text as="h2" variant="headingMd">
@@ -35,7 +35,7 @@ export default function ProductBundle({
             </BlockStack>
 
             {/* Options */}
-            {template.options.map((option) => {
+            {template.options.map((option, index) => {
               const config =
                 bundleConfig?.[template.id]?.[option.id] || {};
 
@@ -70,61 +70,58 @@ export default function ProductBundle({
                         }
                       />
 
-                      {/* Second Product */}
-                      {config.secondProduct ? (
-                        <ProductSelector
-                          key={config.secondProduct.id}
-                          product={config.secondProduct}
-                          value={
-                            config.secondVariant ??
-                            config.secondProduct.variants?.[0]?.value
-                          }
-                          iconColor={
-                            config.secondVariant ??
-                            config.secondProduct.variants?.[0]?.value
-                          }
-                          onChange={(value) =>
-                            updateBundleConfig(
-                              template.id,
-                              option.id,
-                              "secondVariant",
-                              value
-                            )
-                          }
-                          
-                          onRemove={() => {
-                            updateBundleConfig(
-                              template.id,
-                              option.id,
-                              "secondProduct",
-                              null
-                            );
-
-                            updateBundleConfig(
-                              template.id,
-                              option.id,
-                              "secondVariant",
-                              null
-                            );
-                          }}
-
-                        />
-                      ) : (
-                        <InlineStack>
-                          <Button
-                            icon={PlusIcon}
-                            variant="secondary"
-                            onClick={() =>
-                              openProductPicker(
+                      {/* Show only for options after the first */}
+                      {index > 0 &&
+                        (config.secondProduct ? (
+                          <ProductSelector
+                            product={config.secondProduct}
+                            value={
+                              config.secondVariant ??
+                              config.secondProduct.variants?.[0]?.value
+                            }
+                            iconColor={
+                              config.secondVariant ??
+                              config.secondProduct.variants?.[0]?.value
+                            }
+                            onChange={(value) =>
+                              updateBundleConfig(
                                 template.id,
-                                option.id
+                                option.id,
+                                "secondVariant",
+                                value
                               )
                             }
-                          >
-                            Choose Product
-                          </Button>
-                        </InlineStack>
-                      )}
+                            onRemove={() => {
+                              updateBundleConfig(
+                                template.id,
+                                option.id,
+                                "secondProduct",
+                                null
+                              );
+                              updateBundleConfig(
+                                template.id,
+                                option.id,
+                                "secondVariant",
+                                null
+                              );
+                            }}
+                          />
+                        ) : (
+                          <InlineStack>
+                            <Button
+                              icon={PlusIcon}
+                              variant="secondary"
+                              onClick={() =>
+                                openProductPicker(
+                                  template.id,
+                                  option.id
+                                )
+                              }
+                            >
+                              Choose Product
+                            </Button>
+                          </InlineStack>
+                        ))}
                     </BlockStack>
                   )}
                 </OptionRow>

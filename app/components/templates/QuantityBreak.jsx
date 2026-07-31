@@ -23,7 +23,7 @@ export default function QuantityBreak({
       <div className="template-card">
         {/* Card Content */}
         <div className="template-content">
-          <BlockStack gap="400">
+          <BlockStack gap="200">
             <BlockStack gap="100">
               <Text as="h2" variant="headingMd">
                 {template.title}
