@@ -7,6 +7,7 @@ import {
 } from "@shopify/polaris";
 
 import OptionRow from "../OptionRow";
+import FreeGiftBanner from "../common/FreeGiftBanner";
 
 export default function BuyXGetY({
   template,
@@ -18,7 +19,7 @@ export default function BuyXGetY({
       <div className="template-card">
         {/* Card Content */}
         <div className="template-content">
-          <BlockStack gap="400">
+          <BlockStack gap="200">
             <BlockStack gap="100">
               <Text as="h2" variant="headingMd">
                 {template.title}
@@ -38,19 +39,9 @@ export default function BuyXGetY({
               >
                 {selected === option.id &&
                   option.freeGift && (
-                    <Box
-                      padding="300"
-                      background="bg-surface-secondary"
-                      borderRadius="200"
-                    >
-                      <Text
-                        as="p"
-                        variant="bodyMd"
-                        fontWeight="semibold"
-                      >
-                        🎁 FREE Special Gift
-                      </Text>
-                    </Box>
+                    <FreeGiftBanner>
+                      + FREE Special Gift
+                    </FreeGiftBanner>                    
                   )}
               </OptionRow>
             ))}

@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles.templates.css";
-import "../style.optionrow.css";
 
 import {
   Page,
@@ -16,16 +15,6 @@ import { ArrowLeftIcon } from "@shopify/polaris-icons";
 import TemplateGrid from "../components/TemplateGrid";
 import ProductPickerModal from "../components/common/ProductPickerModal";
 
-const colors = [
-  "#000000",
-  "#ff0000",
-  "#ff9800",
-  "#c6e600",
-  "#14c96f",
-  "#1e88e5",
-  "#7c4dff",
-  "#e040fb",
-];
 
 const templates = [
   {
@@ -152,8 +141,20 @@ const availableProducts = [
 
 export default function Templates() {
   const navigate = useNavigate();
+  const [colorSchemes, setColorSchemes] = useState([]);
+  const [selectedColorScheme, setSelectedColorScheme] = useState(null);
 
-  const [selectedColor, setSelectedColor] = useState(colors[0]);
+  useEffect(() => {
+    fetch("/api/color-scheme")
+      .then((res) => res.json())
+      .then((res) => {
+        setColorSchemes(res.data);
+
+        if (res.data.length > 0) {
+          setSelectedColorScheme(res.data[0]);
+        }
+      });
+  }, []);
 
   const [selectedOptions, setSelectedOptions] = useState({
     1: 2,
@@ -233,86 +234,101 @@ export default function Templates() {
   };
 
   return (
-    <Page>
-      <BlockStack gap="500">
+    <Page fullWidth>
+      <div
+        className="templates-theme"
+        style={{
+          "--theme-color": selectedColorScheme?.colorCode || "#B4E600",
+          "--border-color": selectedColorScheme?.borderColor || "#DDF58B",
+          "--bg-color": selectedColorScheme?.bgColor || "#FBFEEB",
+          "--label-bg-color": selectedColorScheme?.labelBgColor || "#F2FBD0",
+          "--active-border-color":
+            selectedColorScheme?.activeBorderColor || "#B4E600",
+          "--active-bg-color":
+            selectedColorScheme?.activeBgColor || "#FFFFFF",
+          "--badge-color": selectedColorScheme?.badgeColor || "#3F6212",
+          "--badge-bg-color":
+            selectedColorScheme?.badgeBgColor || "#B4E600",
+        }}
+      >
+        <BlockStack gap="500">
 
-        {/* Header */}
+          {/* Header */}
 
-        <div className="template-header">
+          <div className="template-header">
 
-          <InlineStack gap="300" blockAlign="center">
+            <InlineStack gap="300" blockAlign="center">
 
-            <Button
-              icon={ArrowLeftIcon}
-              variant="tertiary"
-              onClick={() => navigate(-1)}
-            />
+              <Button
+                icon={ArrowLeftIcon}
+                variant="tertiary"
+                onClick={() => navigate(-1)}
+              />
 
-            <BlockStack gap="100">
+              <BlockStack gap="100">
 
-              <Text as="h1" variant="headingLg">
-                Select discount type
+                <Text as="h1" variant="headingLg">
+                  Select discount type
+                </Text>
+
+                <Text as="p" tone="subdued">
+                  You can fully customize it later.
+                </Text>
+
+              </BlockStack>
+
+            </InlineStack>
+
+            <div className="color-theme">
+
+              <Text as="span" tone="subdued">
+                Colour theme
               </Text>
 
-              <Text as="p" tone="subdued">
-                You can fully customize it later.
-              </Text>
+              <div className="color-picker">
 
-            </BlockStack>
+                {colorSchemes.map((scheme) => (
+                  <button
+                    key={scheme._id}
+                    type="button"
+                    className={`color-item ${
+                      selectedColorScheme?._id === scheme._id ? "selected" : ""
+                    }`}
+                    onClick={() => setSelectedColorScheme(scheme)}
+                  >
+                    <span
+                      className="color-circle"
+                      style={{ backgroundColor: scheme.colorCode }}
+                    />
+                  </button>
+                ))}
 
-          </InlineStack>
-
-          <div className="color-theme">
-
-            <Text as="span" tone="subdued">
-              Colour theme
-            </Text>
-
-            <div className="color-picker">
-
-              {colors.map((color) => (
-
-                <button
-                  key={color}
-                  type="button"
-                  className={`color-item ${
-                    selectedColor === color ? "selected" : ""
-                  }`}
-                  onClick={() => setSelectedColor(color)}
-                >
-                  <span
-                    className="color-circle"
-                    style={{ backgroundColor: color }}
-                  />
-                </button>
-
-              ))}
+              </div>
 
             </div>
 
           </div>
 
-        </div>
+          {/* Templates */}       
 
-        {/* Templates */}
+          <TemplateGrid
+            templates={templates}
+            selectedOptions={selectedOptions}
+            onSelect={handleSelect}
+            bundleConfig={bundleConfig}
+            updateBundleConfig={updateBundleConfig}
+            openProductPicker={openProductPicker}         
+          />
 
-        <TemplateGrid
-          templates={templates}
-          selectedOptions={selectedOptions}
-          onSelect={handleSelect}
-          bundleConfig={bundleConfig}
-          updateBundleConfig={updateBundleConfig}
-          openProductPicker={openProductPicker}
-        />
+          <ProductPickerModal
+            open={productPicker.open}
+            onClose={closeProductPicker}
+            products={availableProducts}
+            onChoose={handleChooseProduct}
+          />
 
-        <ProductPickerModal
-          open={productPicker.open}
-          onClose={closeProductPicker}
-          products={availableProducts}
-          onChoose={handleChooseProduct}
-        />
-
-      </BlockStack>
+        </BlockStack>
+      </div>
     </Page>
   );
 }

@@ -3,7 +3,7 @@ import { getDB } from "../db.server";
 
 const COLLECTION = "color_schemes";
 
-export async function createScheme(data) {
+export async function createColorScheme(data) {
   const db = await getDB();
 
   const result = await db.collection(COLLECTION).insertOne({
@@ -15,15 +15,16 @@ export async function createScheme(data) {
   return result;
 }
 
-export async function getSchemes(shop) {
+export async function getColorSchemes(shop) {
   const db = await getDB();
 
   return db.collection(COLLECTION)
-    .find({ shop })
+    .find({})
+    .sort({ type_name: 1 })
     .toArray();
 }
 
-export async function getSchemeById(id) {
+export async function getColorSchemeById(id) {
   const db = await getDB();
 
   return db.collection(COLLECTION).findOne({
@@ -31,7 +32,7 @@ export async function getSchemeById(id) {
   });
 }
 
-export async function updateScheme(id, data) {
+export async function updateColorScheme(id, data) {
   const db = await getDB();
 
   return db.collection(COLLECTION).updateOne(
@@ -47,7 +48,7 @@ export async function updateScheme(id, data) {
   );
 }
 
-export async function deleteScheme(id) {
+export async function deleteColorScheme(id) {
   const db = await getDB();
 
   return db.collection(COLLECTION).deleteOne({

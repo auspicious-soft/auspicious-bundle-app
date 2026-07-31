@@ -34,7 +34,7 @@
 }
 
 .color-item.selected {
-  border-color: #111827;
+  border-color: var(--theme-color);
 }
 
 .color-circle {
@@ -44,10 +44,95 @@
   display: block;
 }
 
-.popular-ribbon{
-    position:absolute;
-    top:-10px;
-    right:-10px;
+.popular-ribbon {
+  position: absolute;
+  top: -10px;
+  right: 8px;
+  transform: translateX(-8px);
+  z-index: 2;
+
+  background: var(--badge-bg-color);
+  color: #ffffff;
+
+  padding: 6px 14px;
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+.save-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  background: var(--label-bg-color);
+  color: var(--badge-color);
+
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.custom-radio {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  background: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  flex-shrink: 0;
+  transition: all .2s ease;
+}
+
+.custom-radio.active {
+  border-color: var(--active-border-color);
+}
+
+.custom-radio-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: transparent;
+  transition: all .2s ease;
+}
+
+.custom-radio.active .custom-radio-dot {
+  background: var(--active-border-color);
+} 
+
+.free-gift-banner {
+  display: flex;
+  align-items: center;
+  
+
+  width: 100%;
+
+  padding: 12px 16px;
+  margin-top: 12px;
+
+  background: var(--active-border-color);
+  color: #ffffff;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .Polaris-InlineGrid > * {
@@ -62,7 +147,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 450px; /* Adjust if needed */
+  min-height: 450px;
 }
 
 .template-content {
@@ -75,7 +160,8 @@
 
 .option-card {
   position: relative;
-  border: 1px solid #dfe3e8;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
   border-radius: 14px;
   padding: 16px;
   transition: all .2s ease;
@@ -84,13 +170,36 @@
 }
 
 .option-card.active {
-  border: 2px solid #7c3aed;
+  border: 2px solid var(--active-border-color);
+  background: var(--active-bg-color);
 }
 
 .option-extra {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid #f1f1f1;
+}
+
+.option-row {
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.option-row + .option-row {
+  margin-top: 12px;
+}
+
+.option-row:hover {
+  border-color: var(--active-border-color);
+}
+
+.option-row.active {
+  border: 2px solid var(--active-border-color);
+  background: var(--active-bg-color);
 }
 
 @media (max-width: 768px) {
@@ -100,7 +209,7 @@
   }
 
   .color-theme {
-    margin-left: 44px; /* aligns with heading after back button */
+    margin-left: 44px;
     flex-wrap: wrap;
   }
 }

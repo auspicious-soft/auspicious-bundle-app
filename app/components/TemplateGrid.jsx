@@ -10,7 +10,7 @@ export default function TemplateGrid({
   onSelect,
   bundleConfig,
   updateBundleConfig,
-  openProductPicker
+  openProductPicker,
 }) {
   return (
     <InlineGrid
@@ -30,7 +30,7 @@ export default function TemplateGrid({
           onSelect,
           bundleConfig,
           updateBundleConfig,
-          openProductPicker
+          openProductPicker,          
         };
 
         switch (template.type) {
