@@ -14,6 +14,7 @@ import { ArrowLeftIcon } from "@shopify/polaris-icons";
 
 import TemplateGrid from "../components/TemplateGrid";
 import ProductPickerModal from "../components/common/ProductPickerModal";
+import { templatePreview } from "../data/templatePreview";
 
 
 const templates = [
@@ -141,6 +142,25 @@ const availableProducts = [
 
 export default function Templates() {
   const navigate = useNavigate();
+
+  // const [templates, setTemplates] = useState([]);
+
+  // useEffect(() => {
+  //   fetch("/api/bundle-type")
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       const merged = res.data.map((item) => ({
+  //         id: item._id,
+  //         type: item.typeSlug,
+  //         title: item.typeName,
+  //         description: item.typeDescription,
+  //         ...templatePreview[item.typeSlug],
+  //       }));
+
+  //       setTemplates(merged);
+  //     });
+  // }, []);
+
   const [colorSchemes, setColorSchemes] = useState([]);
   const [selectedColorScheme, setSelectedColorScheme] = useState(null);
 

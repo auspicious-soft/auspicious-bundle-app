@@ -33,6 +33,9 @@ export async function action({ request }) {
     case "POST":
       const id = await createBundleType({ 
         typeName: body.typeName,
+        typeDescription: body.typeDescription,
+        typeSlug: body.typeSlug,
+        displayOrder: body.displayOrder,
         status: body.status,
       });
 
@@ -47,6 +50,9 @@ export async function action({ request }) {
 
       const updateResult = await updateBundleType(body.id, {
         typeName: body.typeName,
+        typeDescription: body.typeDescription,
+        typeSlug: body.typeSlug,
+        displayOrder: body.displayOrder,
         status: body.status,
       });
 
