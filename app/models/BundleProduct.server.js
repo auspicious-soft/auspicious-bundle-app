@@ -60,14 +60,9 @@ export async function deleteBundleProduct(id) {
   const db = await getDB();
 
   return db.collection(COLLECTION).deleteOne({
-    _id: new ObjectId(id),
-  });
-}
-
-export async function deleteBundleProductByBundleId(bundleId) {
-  const db = await getDB();
-
-  return db.collection(COLLECTION).deleteOne({
-    bundleId: new ObjectId(bundleId),
+    $or: [
+      { _id: new ObjectId(id) },
+      { bundleId: new ObjectId(id) },
+    ],
   });
 }

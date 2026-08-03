@@ -17,6 +17,8 @@ export default function QuantityBreak({
   onSelect,
   bundleConfig,
   updateBundleConfig,
+  navigate,
+  colorScheme
 }) {
   return (
     <Card roundedAbove="sm">
@@ -117,7 +119,13 @@ export default function QuantityBreak({
 
         {/* Footer */}
         <div className="template-footer">
-          <Button variant="primary" fullWidth>
+          <Button variant="primary" fullWidth           
+            onClick={() => {              
+              navigate(
+                `/app/bundle?template=${template.type}&colorScheme=${colorScheme._id}`
+              )
+            }}
+          >
             Choose
           </Button>
         </div>

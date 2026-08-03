@@ -17,106 +17,6 @@ import ProductPickerModal from "../components/common/ProductPickerModal";
 import { templatePreview } from "../data/templatePreview";
 
 
-// const templates = [
-//   {
-//     id: 1,
-//     type: "quantity_break",
-//     title: "Quantity Break",
-//     description: "Quantity breaks for the same product",
-
-//     options: [
-//       {
-//         id: 1,
-//         title: "Single",
-//         subtitle: "Standard price",
-//         price: 20,
-//         variantName: "",
-//       },
-//       {
-//         id: 2,
-//         title: "Duo",
-//         subtitle: "You save 15%",
-//         badge: "SAVE £6",
-//         price: 34,
-//         comparePrice: 40,
-//         popular: true,
-//         variantName: "Color",
-//         variants: [
-//           { label: "Black", value: "black"},
-//           { label: "Blue", value: "blue"},
-//           { label: "Red", value: "red" },
-//         ],
-//       },
-//     ],
-//   },
-
-//   {
-//     id: 2,
-//     type: "bxgy",
-//     title: "Buy X Get Y",
-//     description: "Buy X, Get Y offer",
-
-//     freeGift: true,
-
-//     options: [
-//       {
-//         id: 1,
-//         title: "Buy 1 Get 1",
-//         badge: "SAVE 50%",
-//         price: 20,
-//         comparePrice: 40,
-//       },
-//       {
-//         id: 2,
-//         title: "Buy 2 Get 3",
-//         badge: "SAVE 60%",
-//         price: 40,
-//         comparePrice: 100,
-//         freeGift: true
-//       },
-//     ],
-//   },
-
-//   {
-//     id: 3,
-//     type: "bundle",
-//     title: "Product Bundle",
-//     description: "Bundle multiple products",
-
-//     options: [
-//       {
-//         id: 1,
-//         title: "1 Pack",
-//         price: 20,
-//         product: {
-//           title: "Basic T-Shirt",
-//           image: "https://picsum.photos/80",
-//           variants: [
-//             { label: "Black", value: "black" },
-//             { label: "Blue", value: "blue" },
-//           ],
-//         }
-//       },
-//       {
-//         id: 2,
-//         title: "2 Pack",
-//         badge: "SAVE £6",
-//         price: 34,
-//         comparePrice: 40,
-
-//         product: {
-//           title: "Basic T-Shirt",
-//           image: "https://picsum.photos/80",
-//           variants: [
-//             { label: "Black", value: "black" },
-//             { label: "Blue", value: "blue" },
-//           ],
-//         },
-//       },
-//     ],
-//   },
-// ];
-
 const availableProducts = [
   {
     id: 1,
@@ -141,6 +41,7 @@ const availableProducts = [
 ];
 
 export default function Templates() {
+
   const navigate = useNavigate();
 
   const [templates, setTemplates] = useState([]); 
@@ -193,8 +94,6 @@ export default function Templates() {
   };
 
   const [bundleConfig, setBundleConfig] = useState({});
-
-  console.log("Bundle Config:", bundleConfig);
 
   const updateBundleConfig = (
     templateId,
@@ -340,7 +239,9 @@ export default function Templates() {
             onSelect={handleSelect}
             bundleConfig={bundleConfig}
             updateBundleConfig={updateBundleConfig}
-            openProductPicker={openProductPicker}                   
+            openProductPicker={openProductPicker} 
+            navigate={navigate}  
+            colorScheme={selectedColorScheme}                
           />
 
           <ProductPickerModal

@@ -23,9 +23,9 @@ export async function loader({ request }) {
 export async function action({ request }) {
 //   const { session } = await authenticate.admin(request);
 
-    const session = {
-        shop: "bundle-store-lbzpplvx.myshopify.com",
-    };
+  const session = {
+      shop: "bundle-store-lbzpplvx.myshopify.com",
+  };
 
   const body = await request.json();
 
@@ -73,7 +73,7 @@ export async function action({ request }) {
 
       if (result.deletedCount === 0) {
         return error("Bundle type not found.", 400);
-      }
+      }      
 
       return success(null,"Bundle type deleted successfully");       
 

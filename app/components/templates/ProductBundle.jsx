@@ -17,6 +17,8 @@ export default function ProductBundle({
   bundleConfig,
   updateBundleConfig,
   openProductPicker,
+  navigate,
+  colorScheme
 }) {
   return (
     <Card roundedAbove="sm">
@@ -131,7 +133,13 @@ export default function ProductBundle({
         </div>
 
         <div className="template-footer">
-          <Button variant="primary" fullWidth>
+          <Button variant="primary" fullWidth
+            onClick={() =>
+              navigate(
+                `/app/bundle?template=${template.type}&colorScheme=${colorScheme._id}`
+              )
+            }
+          >
             Choose
           </Button>
         </div>
