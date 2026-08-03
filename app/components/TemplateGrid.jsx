@@ -11,6 +11,8 @@ export default function TemplateGrid({
   bundleConfig,
   updateBundleConfig,
   openProductPicker,
+  navigate,
+  colorScheme
 }) {
   return (
     <InlineGrid
@@ -23,25 +25,26 @@ export default function TemplateGrid({
       alignItems="stretch"
     >
       {templates.map((template) => {
-        const props = {
-          key: template.id,
+        const props = {        
           template,
           selected: selectedOptions[template.id],
           onSelect,
           bundleConfig,
           updateBundleConfig,
-          openProductPicker,          
+          openProductPicker, 
+          navigate, 
+          colorScheme,        
         };
 
         switch (template.type) {
           case "quantity_break":
-            return <QuantityBreak {...props} />;
+            return <QuantityBreak key={template.id} {...props} />;
 
           case "bxgy":
-            return <BuyXGetY {...props} />;
+            return <BuyXGetY key={template.id} {...props} />;
 
           case "bundle":
-            return <ProductBundle {...props} />;
+            return <ProductBundle key={template.id} {...props} />;
 
           default:
             return null;

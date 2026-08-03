@@ -18,8 +18,8 @@ export async function createBundleType(data) {
 export async function getBundleTypes(shop) {
   const db = await getDB();
   return db.collection(COLLECTION)
-    .find({})
-    .sort({ type_name: 1 })
+    .find({status: 1,})
+    .sort({ displayOrder: 1 })
     .toArray();
 }
 

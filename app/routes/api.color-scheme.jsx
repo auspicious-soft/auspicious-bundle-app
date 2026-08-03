@@ -44,13 +44,14 @@ export async function loader({ request }) {
 export async function action({ request }) {
 //   const { session } = await authenticate.admin(request);
 
-    const session = {
-        shop: "bundle-store-lbzpplvx.myshopify.com",
-    };
+  const session = {
+      shop: "bundle-store-lbzpplvx.myshopify.com",
+  };
 
   const body = await request.json();
 
   switch (request.method) {
+    
     case "POST":
       const id = await createColorScheme({ 
         colorName: body.colorName,
