@@ -15,11 +15,11 @@ export async function createBundle(data) {
   return insertedId;
 }
 
-export async function getBundle(shop) {
+export async function getBundles(shop) {
   const db = await getDB();
 
   return db.collection(COLLECTION)
-    .find({ shop })
+    .find({ shop: shop })
     .toArray();
 }
 
