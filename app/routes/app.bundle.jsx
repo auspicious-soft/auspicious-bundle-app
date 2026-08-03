@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router";
+
 import {
     Page,
     Card,
@@ -7,22 +9,30 @@ import {
     Button,
     InlineGrid,
     BlockStack,
-    Collapsible,
     RadioButton,
-    Icon,
+    Box,
 } from "@shopify/polaris";
+
 import {
     ArrowLeftIcon,
-    ChevronDownIcon,
+    ProductIcon,
+    SettingsIcon,
+    PaintBrushFlatIcon,
 } from "@shopify/polaris-icons";
 
-export default function AdditionalPage() {
-    const [productsOpen, setProductsOpen] = useState(true);
-    const [productOption, setProductOption] = useState("all");
+import CollapsibleCard from "../components/CollapsibleCard";
 
-    const navigate = (path) => {
-        window.history.go(path);
-    };
+export default function AdditionalPage() {
+    const [searchParams] = useSearchParams();
+
+    const templateSlug = searchParams.get("template");
+    const colorSchemeId = searchParams.get("colorScheme");
+
+    const [productsOpen, setProductsOpen] = useState(true);
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    const [styleOpen, setStyleOpen] = useState(false);
+
+    const [productOption, setProductOption] = useState("all");
 
     return (
         <Page fullWidth>
@@ -32,59 +42,64 @@ export default function AdditionalPage() {
                     sm: "1fr",
                     md: "4fr 3fr",
                 }}
-                gap="400"
+                gap="500"
             >
-                {/* First column */}
-                <BlockStack gap="400">
-                    {/* Bundle Creation header */}
-                    <Card>
-                        <InlineStack gap="300" blockAlign="center">
-                            <Button
-                                icon={ArrowLeftIcon}
-                                variant="tertiary"
-                                onClick={() => window.history.back()}
-                                accessibilityLabel="Go back"
-                            />
+                {/* LEFT COLUMN */}
+                <Card roundedAbove="sm">
+                    <Box
+                        padding={{
+                            xs: "400",
+                            sm: "500",
+                            md: "600",
+                        }}
+                    >
+                        <BlockStack gap="400">
+                            {/* Header */}
 
-                            <Text as="h2" variant="headingMd">
-                                Bundle Creation
-                            </Text>
-                        </InlineStack>
-                    </Card>
-
-                    {/* Products section */}
-                    <Card padding="0">
-                        <BlockStack gap="0">
-                            {/* Collapsible header */}
-                            <Button
-                                variant="tertiary"
-                                fullWidth
-                                onClick={() => setProductsOpen(!productsOpen)}
-                                accessibilityLabel={
-                                    productsOpen ? "Collapse Products" : "Expand Products"
-                                }
+                            <InlineStack
+                                align="space-between"
+                                blockAlign="center"
                             >
-                                <InlineStack gap="300" blockAlign="left">
-                                    <Icon source={ChevronDownIcon} />
+                                <InlineStack
+                                    gap="300"
+                                    blockAlign="center"
+                                >
+                                    <Button
+                                        icon={ArrowLeftIcon}
+                                        variant="tertiary"
+                                        onClick={() => window.history.back()}
+                                    />
 
-                                    <Text as="span" variant="headingMd">
-                                        Products
+                                    <Text
+                                        as="h1"
+                                        variant="headingLg"
+                                    >
+                                        Bundle deal
                                     </Text>
                                 </InlineStack>
-                            </Button>
 
-                            <Collapsible
+                                <Button variant="secondary">
+                                    Translations
+                                </Button>
+                            </InlineStack>
+
+                            {/* Products */}
+
+                            <CollapsibleCard
+                                title="Products"
+                                icon={ProductIcon}
                                 open={productsOpen}
-                                id="products-section"
-                                transition
+                                setOpen={setProductsOpen}
                             >
-                                <BlockStack gap="300" padding="400">
+                                <BlockStack gap="300">
                                     <RadioButton
                                         label="All products"
                                         checked={productOption === "all"}
                                         id="all-products"
                                         name="products"
-                                        onChange={() => setProductOption("all")}
+                                        onChange={() =>
+                                            setProductOption("all")
+                                        }
                                     />
 
                                     <RadioButton
@@ -92,7 +107,9 @@ export default function AdditionalPage() {
                                         checked={productOption === "products"}
                                         id="selected-products"
                                         name="products"
-                                        onChange={() => setProductOption("products")}
+                                        onChange={() =>
+                                            setProductOption("products")
+                                        }
                                     />
 
                                     <RadioButton
@@ -100,27 +117,64 @@ export default function AdditionalPage() {
                                         checked={productOption === "collections"}
                                         id="selected-collections"
                                         name="products"
-                                        onChange={() => setProductOption("collections")}
+                                        onChange={() =>
+                                            setProductOption("collections")
+                                        }
                                     />
 
                                     <Button fullWidth>
                                         Select exceptions
                                     </Button>
                                 </BlockStack>
-                            </Collapsible>
+                            </CollapsibleCard>
+
+                            {/* Settings */}
+
+                            <CollapsibleCard
+                                title="Settings"
+                                icon={SettingsIcon}
+                                open={settingsOpen}
+                                setOpen={setSettingsOpen}
+                            >
+                                <Text as="p">
+                                    Settings content goes here.
+                                </Text>
+                            </CollapsibleCard>
+
+                            {/* Style */}
+
+                            <CollapsibleCard
+                                title="Style"
+                                icon={PaintBrushFlatIcon}
+                                open={styleOpen}
+                                setOpen={setStyleOpen}
+                            >
+                                <Text as="p">
+                                    Style configuration goes here.
+                                </Text>
+                            </CollapsibleCard>
                         </BlockStack>
-                    </Card>
-                </BlockStack>
+                    </Box>
+                </Card>
+                {/* RIGHT COLUMN */}
 
-                {/* Second column */}
                 <Card>
-                    <Text as="h2" variant="headingMd">
-                        Create another page
-                    </Text>
+                    <BlockStack gap="300">
+                        <Text
+                            as="h2"
+                            variant="headingMd"
+                        >
+                            Summary
+                        </Text>
 
-                    <Text as="p" variant="bodyMd">
-                        Your second card content goes here.
-                    </Text>
+                        <Text>
+                            Template: {templateSlug || "-"}
+                        </Text>
+
+                        <Text>
+                            Color Scheme: {colorSchemeId || "-"}
+                        </Text>
+                    </BlockStack>
                 </Card>
             </InlineGrid>
         </Page>
