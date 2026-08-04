@@ -24,7 +24,7 @@ export async function getBarsByShop(shop) {
     .toArray();
 }
 
-export async function getBundleBars(bundleId) {
+export async function getBars(bundleId) {
   const db = await getDB();
 
   return db.collection(COLLECTION).find({
@@ -61,14 +61,10 @@ export async function deleteBar(id) {
   const db = await getDB();
 
   return db.collection(COLLECTION).deleteOne({
-    _id: new ObjectId(id),
+    $or: [
+      { _id: new ObjectId(id) },
+      { bundleId: new ObjectId(id) },
+    ],
   });
 }
 
-export async function deleteBarByBundleId(bundleId) {
-  const db = await getDB();
-
-  return db.collection(COLLECTION).deleteMany({
-    bundleId: new ObjectId(bundleId),
-  });
-}

@@ -60,14 +60,10 @@ export async function deleteBundleStyle(id) {
   const db = await getDB();
 
   return db.collection(COLLECTION).deleteOne({
-    _id: new ObjectId(id),
+    $or: [
+      { _id: new ObjectId(id) },
+      { bundleId: new ObjectId(id) },
+    ],
   });
 }
 
-export async function deleteBundleStyleByBundleId(bundleId) {
-  const db = await getDB();
-
-  return db.collection(COLLECTION).deleteOne({
-    bundleId: new ObjectId(bundleId),
-  });
-}

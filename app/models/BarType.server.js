@@ -15,11 +15,11 @@ export async function createBarType(data) {
   return result;
 }
 
-export async function getBarTypes(shop) {
+export async function getBarTypes() {
   const db = await getDB();
 
   return db.collection(COLLECTION)
-    .find({ shop })
+    .find({ status:1 })
     .toArray();
 }
 
