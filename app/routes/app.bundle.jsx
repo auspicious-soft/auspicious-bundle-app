@@ -12,8 +12,13 @@ import {
     BlockStack,
     RadioButton,
     Box,
+    Popover,
+    ActionList,
+    Icon,
 } from "@shopify/polaris";
 
+import { TitleBar, useAppBridge, SaveBar } from "@shopify/app-bridge-react";
+import { ImageIcon } from "@shopify/polaris-icons";
 import {
     ArrowLeftIcon,
     ProductIcon,
@@ -35,26 +40,96 @@ export default function AdditionalPage() {
     const [productsOpen, setProductsOpen] = useState(true);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [styleOpen, setStyleOpen] = useState(false);
-
+   
     const [productOption, setProductOption] = useState("all");
+
+    const [popoverActive, setPopoverActive] = useState(false);
+
+    // All Products -> Exceptions
+    const [exceptionProducts, setExceptionProducts] = useState([]);
+    const [exceptionCollections, setExceptionCollections] = useState([]);
+
+    // Selected Products
+    const [selectedProducts, setSelectedProducts] = useState([]);
+
+    // Selected Collections
+    const [selectedCollections, setSelectedCollections] = useState([]);
+
+    // 👇 ADD THE FUNCTIONS HERE
+    const openProductPicker = async () => {
+        const selection = await shopify.resourcePicker({
+            type: "product",
+            multiple: true,
+            selectionIds: selectedProducts.map(item => ({
+                id: item.id
+            }))
+        });
+
+        if (!selection) return;
+
+        if (productOption === "all") {
+            setExceptionProducts(selection);
+        } else {
+            setSelectedProducts(selection);
+        }
+         await shopify.saveBar.show("bundle-save-bar");
+    };
+    const openCollectionPicker = async () => {
+        const selection = await shopify.resourcePicker({
+            type: "collection",
+            multiple: true,
+        });
+
+        if (!selection) return;
+
+        if (productOption === "all") {
+            setExceptionCollections(selection);
+        } else {
+            setSelectedCollections(selection);
+        }
+    };
+
+    const removeExceptionProduct = (id) => {
+        setExceptionProducts(prev =>
+            prev.filter(item => item.id !== id)
+        );
+    };
+
+    const removeExceptionCollection = (id) => {
+        setExceptionCollections(prev =>
+            prev.filter(item => item.id !== id)
+        );
+    };
+
+    const removeProduct = (id) => {
+        setSelectedProducts(prev =>
+            prev.filter(item => item.id !== id)
+        );
+    };
+
+    const removeCollection = (id) => {
+        setSelectedCollections(prev =>
+            prev.filter(item => item.id !== id)
+        );
+    };
 
     const handleSave = async () => {
         // Save your data
         await shopify.saveBar.hide("bundle-save-bar");
     };
-
+ 
     const handleDiscard = async () => {
         // Reset your changes
         await shopify.saveBar.hide("bundle-save-bar");
     };
 
-    return (  
+    return (
         <>
             <SaveBar id="bundle-save-bar">
                 <button variant="primary" onClick={handleSave}>Save</button>
                 <button onClick={handleDiscard}>Discard</button>
             </SaveBar>
-
+ 
             <TitleBar title="Auspicious Bundles">
                 <button
                     variant="primary"
@@ -67,19 +142,53 @@ export default function AdditionalPage() {
                 >
                     Save as draft
                 </button>                
-            </TitleBar>     
-            
-            
-            <Page fullwidth>
+            </TitleBar>  
+            <Page fullWidth>
                 <InlineGrid
                     columns={{
                         xs: "1fr",
                         sm: "1fr",
-                        md: "4fr 3fr",
+                        md: "3fr 4fr",
                     }}
                     gap="500"
                 >
                     {/* LEFT COLUMN */}
+                    <Card>
+                        <BlockStack gap="300">
+                            <InlineStack
+                                gap="300"
+                                blockAlign="center"
+                            >
+                                <Button
+                                    icon={ArrowLeftIcon}
+                                    variant="tertiary"
+                                    onClick={() => window.history.back()}
+                                />
+
+                                <Text
+                                    as="h2"
+                                    variant="headingMd"
+                                >
+                                    Preview
+                                </Text>
+                            </InlineStack>
+
+
+                            <Text>
+                                Template: {templateSlug || "-"}
+                            </Text>
+
+                            <Text>
+                                Color Scheme: {colorSchemeId || "-"}
+                            </Text>
+                        </BlockStack>
+                    </Card>
+
+
+
+
+                    {/* RIGHT COLUMN */}
+
                     <Card roundedAbove="sm">
                         <Box
                             padding={{
@@ -99,11 +208,11 @@ export default function AdditionalPage() {
                                         gap="300"
                                         blockAlign="center"
                                     >
-                                        <Button
+                                        {/* <Button
                                             icon={ArrowLeftIcon}
                                             variant="tertiary"
                                             onClick={() => window.history.back()}
-                                        />
+                                        /> */}
 
                                         <Text
                                             as="h1"
@@ -127,14 +236,13 @@ export default function AdditionalPage() {
                                     setOpen={setProductsOpen}
                                 >
                                     <BlockStack gap="300">
+
                                         <RadioButton
                                             label="All products"
                                             checked={productOption === "all"}
                                             id="all-products"
                                             name="products"
-                                            onChange={() =>
-                                                setProductOption("all")
-                                            }
+                                            onChange={() => setProductOption("all")}
                                         />
 
                                         <RadioButton
@@ -142,9 +250,7 @@ export default function AdditionalPage() {
                                             checked={productOption === "products"}
                                             id="selected-products"
                                             name="products"
-                                            onChange={() =>
-                                                setProductOption("products")
-                                            }
+                                            onChange={() => setProductOption("products")}
                                         />
 
                                         <RadioButton
@@ -152,16 +258,332 @@ export default function AdditionalPage() {
                                             checked={productOption === "collections"}
                                             id="selected-collections"
                                             name="products"
-                                            onChange={() =>
-                                                setProductOption("collections")
-                                            }
+                                            onChange={() => setProductOption("collections")}
                                         />
 
-                                        <Button fullWidth>
-                                            Select exceptions
-                                        </Button>
+                                        {/* =======================
+                ALL PRODUCTS
+            ======================== */}
+
+                                        {productOption === "all" && (
+                                            <BlockStack gap="300">
+
+                                                {(exceptionProducts.length > 0 ||
+                                                    exceptionCollections.length > 0) && (
+                                                        <BlockStack gap="200">
+
+                                                            <Text
+                                                                as="h3"
+                                                                variant="headingSm"
+                                                            >
+                                                                Exceptions
+                                                            </Text>
+
+                                                            {exceptionProducts.map((product) => (
+                                                                <InlineStack
+                                                                    key={product.id}
+                                                                    align="space-between"
+                                                                    blockAlign="center"
+                                                                >
+                                                                    <InlineStack
+                                                                        gap="300"
+                                                                        blockAlign="center"
+                                                                    >
+                                                                        {product.images?.[0]?.url ? (
+                                                                            <img
+                                                                                src={product.images[0].url}
+                                                                                alt={product.title}
+                                                                                style={{
+                                                                                    width: "40px",
+                                                                                    height: "40px",
+                                                                                    objectFit: "cover",
+                                                                                    borderRadius: "8px",
+                                                                                }}
+                                                                            />
+                                                                        ) : (
+                                                                            <Box
+                                                                                width="40px"
+                                                                                height="40px"
+                                                                                background="bg-surface-secondary"
+                                                                                borderRadius="200"
+                                                                            >
+                                                                                <Icon source={ImageIcon} />
+                                                                            </Box>
+                                                                        )}
+
+                                                                        <Text>
+                                                                            {product.title}
+                                                                        </Text>
+                                                                    </InlineStack>
+
+
+                                                                    <Button
+                                                                        variant="plain"
+                                                                        tone="critical"
+                                                                        onClick={() =>
+                                                                            removeExceptionProduct(product.id)
+                                                                        }
+                                                                    >
+                                                                        Delete
+                                                                    </Button>
+
+                                                                </InlineStack>
+                                                            ))}
+
+                                                            {exceptionCollections.map((collection) => (
+                                                                <InlineStack
+                                                                    key={collection.id}
+                                                                    align="space-between"
+                                                                    blockAlign="center"
+                                                                >
+                                                                    <InlineStack
+                                                                        gap="300"
+                                                                        blockAlign="center"
+                                                                    >
+
+                                                                        {collection.image?.url ? (
+                                                                            <img
+                                                                                src={collection.image.url}
+                                                                                alt={collection.title}
+                                                                                style={{
+                                                                                    width: "40px",
+                                                                                    height: "40px",
+                                                                                    objectFit: "cover",
+                                                                                    borderRadius: "8px",
+                                                                                }}
+                                                                            />
+                                                                        ) : (
+                                                                            <Box
+                                                                                width="40px"
+                                                                                height="40px"
+                                                                                background="bg-surface-secondary"
+                                                                                borderRadius="200"
+                                                                            >
+                                                                                <Icon source={ImageIcon} />
+                                                                            </Box>
+                                                                        )}
+
+                                                                        <Text>
+                                                                            {collection.title}
+                                                                        </Text>
+
+                                                                    </InlineStack>
+
+
+                                                                    <Button
+                                                                        variant="plain"
+                                                                        tone="critical"
+                                                                        onClick={() =>
+                                                                            removeExceptionCollection(collection.id)
+                                                                        }
+                                                                    >
+                                                                        Delete
+                                                                    </Button>
+
+                                                                </InlineStack>
+                                                            ))}
+
+                                                        </BlockStack>
+                                                    )}
+
+                                                <Popover
+                                                    active={popoverActive}
+                                                    activator={
+                                                        <Button
+                                                            fullWidth
+                                                            onClick={() =>
+                                                                setPopoverActive(!popoverActive)
+                                                            }
+                                                        >
+                                                            {exceptionProducts.length ||
+                                                                exceptionCollections.length
+                                                                ? "Select more exceptions"
+                                                                : "Select exceptions"}
+                                                        </Button>
+                                                    }
+                                                    onClose={() =>
+                                                        setPopoverActive(false)
+                                                    }
+                                                >
+                                                    <ActionList
+                                                        items={[
+                                                            {
+                                                                content: "Products",
+                                                                icon: ProductIcon,
+                                                                onAction: async () => {
+                                                                    setPopoverActive(false);
+                                                                    await openProductPicker();
+                                                                },
+                                                            },
+                                                            {
+                                                                content: "Collections",
+                                                                icon: ProductIcon,
+                                                                onAction: async () => {
+                                                                    setPopoverActive(false);
+                                                                    await openCollectionPicker();
+                                                                },
+                                                            },
+                                                        ]}
+                                                    />
+                                                </Popover>
+
+                                            </BlockStack>
+                                        )}
+
+                                        {/* =======================
+                SELECTED PRODUCTS
+            ======================== */}
+
+                                        {productOption === "products" && (
+                                            <BlockStack gap="300">
+
+                                                {selectedProducts.length > 0 && (
+                                                    <>
+                                                        <Text
+                                                            as="h3"
+                                                            variant="headingSm"
+                                                        >
+                                                            Products
+                                                        </Text>
+
+                                                        {selectedProducts.map((product) => (
+                                                            <InlineStack
+                                                                key={product.id}
+                                                                align="space-between"
+                                                                blockAlign="center"
+                                                            >
+                                                                <InlineStack gap="300" blockAlign="center">
+
+                                                                    {product.images?.[0]?.url ? (
+                                                                        <img
+                                                                            src={product.images[0].url}
+                                                                            alt={product.title}
+                                                                            style={{
+                                                                                width: "40px",
+                                                                                height: "40px",
+                                                                                objectFit: "cover",
+                                                                                borderRadius: "8px",
+                                                                            }}
+                                                                        />
+                                                                    ) : (
+                                                                        <Box
+                                                                            width="40px"
+                                                                            height="40px"
+                                                                            background="bg-surface-secondary"
+                                                                            borderRadius="200"
+                                                                        >
+                                                                            <Icon source={ImageIcon} />
+                                                                        </Box>
+                                                                    )}
+
+                                                                    <Text>{product.title}</Text>
+
+                                                                </InlineStack>
+
+                                                                <Button
+                                                                    variant="tertiary"
+                                                                    tone="critical"
+                                                                    onClick={() => removeProduct(product.id)}
+                                                                >
+                                                                    Delete
+                                                                </Button>
+
+                                                            </InlineStack>
+                                                        ))}
+                                                    </>
+                                                )}
+
+                                                <Button
+                                                    fullWidth
+                                                    onClick={openProductPicker}
+                                                >
+                                                    {selectedProducts.length
+                                                        ? "Select more products"
+                                                        : "Select products"}
+                                                </Button>
+
+                                            </BlockStack>
+                                        )}
+
+                                        {/* =======================
+                SELECTED COLLECTIONS
+            ======================== */}
+
+                                        {productOption === "collections" && (
+                                            <BlockStack gap="300">
+
+                                                {selectedCollections.length > 0 && (
+                                                    <>
+                                                        <Text
+                                                            as="h3"
+                                                            variant="headingSm"
+                                                        >
+                                                            Collections
+                                                        </Text>
+
+                                                        {selectedCollections.map((collection) => (
+                                                            <InlineStack
+                                                                key={collection.id}
+                                                                align="space-between"
+                                                                blockAlign="center"
+                                                            >
+                                                                <InlineStack gap="300" blockAlign="center">
+
+                                                                    {collection.image?.url ? (
+                                                                        <img
+                                                                            src={collection.image.url}
+                                                                            alt={collection.title}
+                                                                            style={{
+                                                                                width: "40px",
+                                                                                height: "40px",
+                                                                                objectFit: "cover",
+                                                                                borderRadius: "8px",
+                                                                            }}
+                                                                        />
+                                                                    ) : (
+                                                                        <Box
+                                                                            width="40px"
+                                                                            height="40px"
+                                                                            background="bg-surface-secondary"
+                                                                            borderRadius="200"
+                                                                        >
+                                                                            <Icon source={ImageIcon} />
+                                                                        </Box>
+                                                                    )}
+
+                                                                    <Text>{collection.title}</Text>
+
+                                                                </InlineStack>
+
+                                                                <Button
+                                                                    variant="tertiary"
+                                                                    tone="critical"
+                                                                    onClick={() => removeCollection(collection.id)}
+                                                                >
+                                                                    Delete
+                                                                </Button>
+
+                                                            </InlineStack>
+                                                        ))}
+                                                    </>
+                                                )}
+
+                                                <Button
+                                                    fullWidth
+                                                    onClick={openCollectionPicker}
+                                                >
+                                                    {selectedCollections.length
+                                                        ? "Select more collections"
+                                                        : "Select collections"}
+                                                </Button>
+
+                                            </BlockStack>
+                                        )}
+
                                     </BlockStack>
                                 </CollapsibleCard>
+
+
 
                                 {/* Settings */}
 
@@ -191,28 +613,8 @@ export default function AdditionalPage() {
                             </BlockStack>
                         </Box>
                     </Card>
-                    {/* RIGHT COLUMN */}
-
-                    <Card>
-                        <BlockStack gap="300">
-                            <Text
-                                as="h2"
-                                variant="headingMd"
-                            >
-                                Summary
-                            </Text>
-
-                            <Text>
-                                Template: {templateSlug || "-"}
-                            </Text>
-
-                            <Text>
-                                Color Scheme: {colorSchemeId || "-"}
-                            </Text>
-                        </BlockStack>
-                    </Card>
                 </InlineGrid>
-            </Page>  
-        </>      
+            </Page>
+        </>
     );
 }
