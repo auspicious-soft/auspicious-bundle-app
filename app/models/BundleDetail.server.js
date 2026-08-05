@@ -12,7 +12,7 @@ export async function createBundle(data) {
     updatedAt: new Date(),
   });
 
-  return insertedId;
+  return result.insertedId;
 }
 
 export async function getBundles(shop) {

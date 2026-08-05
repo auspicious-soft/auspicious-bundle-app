@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { TitleBar, useAppBridge, SaveBar } from "@shopify/app-bridge-react";
-
+import { ImageIcon } from "@shopify/polaris-icons";
+import { useNavigate } from "react-router";
 import {
     Page,
     Card,
@@ -17,8 +18,6 @@ import {
     Icon,
 } from "@shopify/polaris";
 
-import { TitleBar, useAppBridge, SaveBar } from "@shopify/app-bridge-react";
-import { ImageIcon } from "@shopify/polaris-icons";
 import {
     ArrowLeftIcon,
     ProductIcon,
@@ -30,7 +29,9 @@ import CollapsibleCard from "../components/CollapsibleCard";
 
 export default function AdditionalPage() {
     
-    const shopify = useAppBridge();    
+    const shopify = useAppBridge(); 
+    
+    const navigate = useNavigate();
 
     const [searchParams] = useSearchParams();
 
@@ -162,7 +163,7 @@ export default function AdditionalPage() {
                                 <Button
                                     icon={ArrowLeftIcon}
                                     variant="tertiary"
-                                    onClick={() => window.history.back()}
+                                    onClick={() => navigate(-1)}
                                 />
 
                                 <Text

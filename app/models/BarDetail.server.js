@@ -61,10 +61,15 @@ export async function deleteBar(id) {
   const db = await getDB();
 
   return db.collection(COLLECTION).deleteOne({
-    $or: [
-      { _id: new ObjectId(id) },
-      { bundleId: new ObjectId(id) },
-    ],
+    _id: new ObjectId(id),
+  });
+}
+
+export async function deleteBarsByBundle(bundleId) {
+  const db = await getDB();
+
+  return db.collection(COLLECTION).deleteMany({
+    bundleId: new ObjectId(bundleId),
   });
 }
 

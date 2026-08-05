@@ -56,13 +56,34 @@ export async function updateBundleProduct(id, data) {
   );
 }
 
+export async function updateBundleProductByBundleId(bundleId, data) {
+  const db = await getDB();
+
+  return db.collection(COLLECTION).updateOne(
+    {
+      bundleId: new ObjectId(bundleId),
+    },
+    {
+      $set: {
+        ...data,
+        updatedAt: new Date(),
+      },
+    }
+  );
+}
+
 export async function deleteBundleProduct(id) {
   const db = await getDB();
 
   return db.collection(COLLECTION).deleteOne({
-    $or: [
-      { _id: new ObjectId(id) },
-      { bundleId: new ObjectId(id) },
-    ],
+    _id: new ObjectId(id), 
+  });
+}
+
+export async function deleteBundleProductByBundle(bundleId) {
+  const db = await getDB();
+
+  return db.collection(COLLECTION).deleteOne({
+    bundleId: new ObjectId(bundleId),
   });
 }

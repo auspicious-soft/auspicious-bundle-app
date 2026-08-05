@@ -44,7 +44,7 @@ export default function Templates() {
 
   const navigate = useNavigate();
 
-  const [templates, setTemplates] = useState([]); 
+  const [templates, setTemplates] = useState([]);   
 
   useEffect(() => {
      console.log("Fetching bundle types...");
@@ -74,9 +74,23 @@ export default function Templates() {
       .then((res) => {
         setColorSchemes(res.data);
 
-        if (res.data.length > 0) {
-          setSelectedColorScheme(res.data[0]);
+        const savedColorSchemeId = localStorage.getItem(
+          "selectedColorSchemeId"
+        );
+
+        let selectedScheme = res.data[0];
+
+        if (savedColorSchemeId) {
+          const scheme = res.data.find(
+            (item) => item._id === savedColorSchemeId
+          );
+
+          if (scheme) {
+            selectedScheme = scheme;
+          }
         }
+
+        setSelectedColorScheme(selectedScheme);
       });
   }, []);
 
@@ -216,7 +230,10 @@ export default function Templates() {
                     className={`color-item ${
                       selectedColorScheme?._id === scheme._id ? "selected" : ""
                     }`}
-                    onClick={() => setSelectedColorScheme(scheme)}
+                    onClick={() => {
+                      setSelectedColorScheme(scheme);
+                      localStorage.setItem("selectedColorSchemeId", scheme._id);
+                    }}
                   >
                     <span
                       className="color-circle"
