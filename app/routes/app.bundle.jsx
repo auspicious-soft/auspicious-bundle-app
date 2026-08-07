@@ -16,6 +16,9 @@ import {
     Popover,
     ActionList,
     Icon,
+    TextField,
+    Divider,
+    Select,
 } from "@shopify/polaris";
 
 import {
@@ -27,10 +30,11 @@ import {
 
 import CollapsibleCard from "../components/CollapsibleCard";
 
+
 export default function AdditionalPage() {
-    
-    const shopify = useAppBridge(); 
-    
+
+    const shopify = useAppBridge();
+
     const navigate = useNavigate();
 
     const [searchParams] = useSearchParams();
@@ -41,7 +45,7 @@ export default function AdditionalPage() {
     const [productsOpen, setProductsOpen] = useState(true);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [styleOpen, setStyleOpen] = useState(false);
-   
+
     const [productOption, setProductOption] = useState("all");
 
     const [popoverActive, setPopoverActive] = useState(false);
@@ -73,7 +77,7 @@ export default function AdditionalPage() {
         } else {
             setSelectedProducts(selection);
         }
-         await shopify.saveBar.show("bundle-save-bar");
+        await shopify.saveBar.show("bundle-save-bar");
     };
     const openCollectionPicker = async () => {
         const selection = await shopify.resourcePicker({
@@ -118,11 +122,14 @@ export default function AdditionalPage() {
         // Save your data
         await shopify.saveBar.hide("bundle-save-bar");
     };
- 
+
     const handleDiscard = async () => {
         // Reset your changes
         await shopify.saveBar.hide("bundle-save-bar");
     };
+    const [bundleName, setBundleName] = useState("");
+    const [blockTitle, blockTitleName] = useState("");
+    const [discountName, setDiscountName] = useState("");
 
     return (
         <>
@@ -130,7 +137,7 @@ export default function AdditionalPage() {
                 <button variant="primary" onClick={handleSave}>Save</button>
                 <button onClick={handleDiscard}>Discard</button>
             </SaveBar>
- 
+
             <TitleBar title="Auspicious Bundles">
                 <button
                     variant="primary"
@@ -142,8 +149,8 @@ export default function AdditionalPage() {
                     onClick={() => console.log('Export clicked')}
                 >
                     Save as draft
-                </button>                
-            </TitleBar>  
+                </button>
+            </TitleBar>
             <Page fullWidth>
                 <InlineGrid
                     columns={{
@@ -594,9 +601,43 @@ export default function AdditionalPage() {
                                     open={settingsOpen}
                                     setOpen={setSettingsOpen}
                                 >
-                                    <Text as="p">
-                                        Settings content goes here.
-                                    </Text>
+                                    <BlockStack gap="400" marginBlockStart="400">
+                                        <TextField
+                                            label="Name (only visible for you)"
+                                            value={bundleName}
+                                            onChange={setBundleName}
+                                            autoComplete="off"
+                                        />
+                                        <TextField
+                                            label="Block title"
+                                            value={blockTitle}
+                                            onChange={blockTitleName}
+                                            autoComplete="off"
+                                        />
+                                        <TextField
+                                            label="Discount name (shown in cart/checkout)"
+                                            value={discountName}
+                                            onChange={setDiscountName}
+                                            autoComplete="off"
+                                        />
+                                        {/* <Box
+                                            style={{
+                                                height: "1px",
+                                                background: "var(--p-color-border-secondary)",
+                                                width: "100%",
+                                            }}
+                                        /> */}
+                                        <Divider />
+                                        <Text as="h2" variant="headingMd">
+                                            Visibility
+                                        </Text>
+                                        {/* <Select
+                                            label="Markets"
+                                            options={marketOptions}
+                                            value={selectedMarket}
+                                            onChange={setSelectedMarket}
+                                        /> */}
+                                    </BlockStack>
                                 </CollapsibleCard>
 
                                 {/* Style */}
