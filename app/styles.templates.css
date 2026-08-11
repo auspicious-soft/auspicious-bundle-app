@@ -206,7 +206,13 @@
   position: relative;
   z-index: 1000;
 }
+.bundle-tabs-configure .Polaris-Tabs__Tab--active {
+  color: #008060;
+}
 
+.bundle-tabs-configure .Polaris-Tabs__Tab--active::after {
+  background: #008060;
+}
 @media (max-width: 768px) {
   .template-header {
     flex-direction: column;
