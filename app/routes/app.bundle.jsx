@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useSearchParams, useLoaderData } from "react-router";
 import { authenticate } from "../shopify.server";
 import { TitleBar, useAppBridge, SaveBar } from "@shopify/app-bridge-react";
@@ -22,6 +22,7 @@ import {
     Select,
     Checkbox,
     Tooltip,
+    DatePicker,
 } from "@shopify/polaris";
 
 import {
@@ -187,6 +188,34 @@ export default function AdditionalPage() {
     const [bundleName, setBundleName] = useState("");
     const [blockTitle, blockTitleName] = useState("");
     const [discountName, setDiscountName] = useState("");
+
+    const getCurrentDateIST = () => {
+        return new Intl.DateTimeFormat("en-CA", {
+            timeZone: "Asia/Kolkata",
+        }).format(new Date());
+    };
+
+    const getCurrentTimeIST = () => {
+        return new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Asia/Kolkata",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+        }).format(new Date());
+    };
+
+    const [startDate, setStartDate] = useState(getCurrentDateIST());
+    const [startTime, setStartTime] = useState(getCurrentTimeIST());
+
+
+    const [hasEndDate, setHasEndDate] = useState(false);
+
+    const [endDate, setEndDate] = useState(getCurrentDateIST());
+    const [endTime, setEndTime] = useState(getCurrentTimeIST());
+
+    const [differentVariants, setDifferentVariants] = useState(false);
+    const [showVariantSelection, setShowVariantSelection] = useState(false);
+    const [hideThemeVariantPicker, setHideThemeVariantPicker] = useState(false);
 
     return (
         <>
@@ -751,6 +780,96 @@ export default function AdditionalPage() {
                                                     <Icon source={InfoIcon} />
                                                 </Tooltip>
                                             </InlineStack>
+                                            <BlockStack gap="400">
+                                                <Text as="h2" variant="headingMd">
+                                                    Active dates
+                                                </Text>
+                                                <InlineGrid
+                                                    columns={{
+                                                        xs: "1fr",
+                                                        sm: "1fr 1fr",
+                                                    }}
+                                                    gap="400"
+                                                >
+                                                    <TextField
+                                                        label="Start date"
+                                                        type="date"
+                                                        value={startDate}
+                                                        onChange={setStartDate}
+                                                        autoComplete="off"
+                                                    />
+
+                                                    <TextField
+                                                        label="Start time (GMT+5:30)"
+                                                        type="time"
+                                                        value={startTime}
+                                                        onChange={setStartTime}
+                                                        autoComplete="off"
+                                                    />
+                                                </InlineGrid>
+                                                <Checkbox
+                                                    label="Set end date"
+                                                    checked={hasEndDate}
+                                                    onChange={setHasEndDate}
+                                                />
+                                                {hasEndDate && (
+                                                    <InlineGrid
+                                                        columns={{
+                                                            xs: "1fr",
+                                                            sm: "1fr 1fr",
+                                                        }}
+                                                        gap="400"
+                                                    >
+                                                        <TextField
+                                                            label="End date"
+                                                            type="date"
+                                                            value={endDate}
+                                                            onChange={setEndDate}
+                                                            autoComplete="off"
+                                                        />
+
+                                                        <TextField
+                                                            label="End time (GMT+5:30)"
+                                                            type="time"
+                                                            value={endTime}
+                                                            onChange={setEndTime}
+                                                            autoComplete="off"
+                                                        />
+                                                    </InlineGrid>
+                                                )}
+                                                <Divider />
+                                                <Text as="h2" variant="headingMd">
+                                                    Variants
+                                                </Text>
+                                                <BlockStack gap="300">
+
+                                                    {/* Let customers choose different variants */}
+                                                    <Checkbox
+                                                        label="Let customers choose different variants for each item"
+                                                        checked={differentVariants}
+                                                        onChange={setDifferentVariants}
+                                                    />
+
+                                                    {/* Show variant selection */}
+                                                    {differentVariants && (
+                                                        <Box paddingInlineStart="600">
+                                                            <Checkbox
+                                                                label="Show variant selection for single quantity deal bar"
+                                                                checked={showVariantSelection}
+                                                                onChange={setShowVariantSelection}
+                                                            />
+                                                        </Box>
+                                                    )}
+
+                                                    {/* Hide theme variant picker */}
+                                                    <Checkbox
+                                                        label="Hide theme variant picker"
+                                                        checked={hideThemeVariantPicker}
+                                                        onChange={setHideThemeVariantPicker}
+                                                    />
+
+                                                </BlockStack>
+                                            </BlockStack>
                                         </BlockStack>
                                     </Box>
                                 </CollapsibleCard>
