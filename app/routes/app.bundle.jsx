@@ -119,39 +119,90 @@ export default function AdditionalPage() {
     const [selectedCollections, setSelectedCollections] = useState([]);
 
     // 👇 ADD THE FUNCTIONS HERE
-    const openProductPicker = async () => {
-        const selection = await shopify.resourcePicker({
-            type: "product",
-            multiple: true,
-            selectionIds: selectedProducts.map(item => ({
-                id: item.id
-            }))
-        });
+//     const openProductPicker = async () => {
+//     const selection = await shopify.resourcePicker({
+//         type: "product",
+//         multiple: true,
+//         selectionIds: selectedProducts.map((item) => ({
+//             id: item.id,
+//         })),
+//     });
 
-        if (!selection) return;
+//     if (!selection) return;
 
-        if (productOption === "all") {
-            setExceptionProducts(selection);
-        } else {
-            setSelectedProducts(selection);
-        }
-        await shopify.saveBar.show("bundle-save-bar");
-    };
-    const openCollectionPicker = async () => {
-        const selection = await shopify.resourcePicker({
-            type: "collection",
-            multiple: true,
-        });
+//     console.log("PRODUCT PICKER SELECTION:", selection);
+//     console.log("FIRST PRODUCT:", selection[0]);
 
-        if (!selection) return;
+//     if (productOption === "all") {
+//         setExceptionProducts(selection);
+//     } else {
+//         setSelectedProducts(selection);
+//     }
 
-        if (productOption === "all") {
-            setExceptionCollections(selection);
-        } else {
-            setSelectedCollections(selection);
-        }
-    };
+//     await shopify.saveBar.show("bundle-save-bar");
+// };
+const openProductPicker = async () => {
+    const productsToRemember =
+        productOption === "all"
+            ? exceptionProducts
+            : selectedProducts;
 
+    const selection = await shopify.resourcePicker({
+        type: "product",
+        multiple: true,
+        selectionIds: productsToRemember.map((product) => ({
+            id: product.id,
+        })),
+    });
+
+    if (!selection) return;
+
+    if (productOption === "all") {
+        setExceptionProducts(selection);
+    } else if (productOption === "products") {
+        setSelectedProducts(selection);
+    }
+
+    await shopify.saveBar.show("bundle-save-bar");
+};
+    // const openCollectionPicker = async () => {
+    //     const selection = await shopify.resourcePicker({
+    //         type: "collection",
+    //         multiple: true,
+    //     });
+
+    //     if (!selection) return;
+    //      console.log("collection PICKER SELECTION:", selection);
+    //     if (productOption === "all") {
+    //         setExceptionCollections(selection);
+    //     } else {
+    //         setSelectedCollections(selection);
+    //     }
+    // };
+const openCollectionPicker = async () => {
+    const collectionsToRemember =
+        productOption === "all"
+            ? exceptionCollections
+            : selectedCollections;
+
+    const selection = await shopify.resourcePicker({
+        type: "collection",
+        multiple: true,
+        selectionIds: collectionsToRemember.map((collection) => ({
+            id: collection.id,
+        })),
+    });
+
+    if (!selection) return;
+
+    if (productOption === "all") {
+        setExceptionCollections(selection);
+    } else if (productOption === "collections") {
+        setSelectedCollections(selection);
+    }
+
+    await shopify.saveBar.show("bundle-save-bar");
+};
     const removeExceptionProduct = (id) => {
         setExceptionProducts(prev =>
             prev.filter(item => item.id !== id)
@@ -384,9 +435,9 @@ export default function AdditionalPage() {
                                                                             gap="300"
                                                                             blockAlign="center"
                                                                         >
-                                                                            {product.images?.[0]?.url ? (
+                                                                            {product.images?.[0]?.originalSrc ? (
                                                                                 <img
-                                                                                    src={product.images[0].url}
+                                                                                    src={product.images[0].originalSrc}
                                                                                     alt={product.title}
                                                                                     style={{
                                                                                         width: "40px",
@@ -436,9 +487,9 @@ export default function AdditionalPage() {
                                                                             blockAlign="center"
                                                                         >
 
-                                                                            {collection.image?.url ? (
+                                                                            {collection.image?.originalSrc ? (
                                                                                 <img
-                                                                                    src={collection.image.url}
+                                                                                    src={collection.image.originalSrc}
                                                                                     alt={collection.title}
                                                                                     style={{
                                                                                         width: "40px",
@@ -549,7 +600,7 @@ export default function AdditionalPage() {
                                                                 >
                                                                     <InlineStack gap="300" blockAlign="center">
 
-                                                                        {product.images?.[0]?.url ? (
+                                                                        {/* {product.images?.[0]?.url ? (
                                                                             <img
                                                                                 src={product.images[0].url}
                                                                                 alt={product.title}
@@ -569,8 +620,28 @@ export default function AdditionalPage() {
                                                                             >
                                                                                 <Icon source={ImageIcon} />
                                                                             </Box>
-                                                                        )}
-
+                                                                        )} */}
+ {product.images?.[0]?.originalSrc ? (
+            <img
+                src={product.images[0].originalSrc}
+                alt={product.images[0].altText || product.title}
+                style={{
+                    width: "40px",
+                    height: "40px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                }}
+            />
+        ) : (
+            <Box
+                width="40px"
+                height="40px"
+                background="bg-surface-secondary"
+                borderRadius="200"
+            >
+                <Icon source={ImageIcon} />
+            </Box>
+        )}
                                                                         <Text>{product.title}</Text>
 
                                                                     </InlineStack>
@@ -624,9 +695,9 @@ export default function AdditionalPage() {
                                                                 >
                                                                     <InlineStack gap="300" blockAlign="center">
 
-                                                                        {collection.image?.url ? (
+                                                                        {collection.image?.originalSrc ? (
                                                                             <img
-                                                                                src={collection.image.url}
+                                                                                src={collection.image.originalSrc}
                                                                                 alt={collection.title}
                                                                                 style={{
                                                                                     width: "40px",
