@@ -26,10 +26,10 @@ import {
   createBar,
 } from "../models/BarDetail.server";
 
-import {
-  getBarProducts,
-  createBarProducts,
-} from "../models/BarProduct.server";
+// import {
+//   getBarProducts,
+//   createBarProducts,
+// } from "../models/BarProduct.server";
 
 export async function action({ request }) {
   if (request.method !== "POST") {

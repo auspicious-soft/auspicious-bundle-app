@@ -1,9 +1,19 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSearchParams, useLoaderData } from "react-router";
 import { authenticate } from "../shopify.server";
 import { TitleBar, useAppBridge, SaveBar } from "@shopify/app-bridge-react";
 import { ImageIcon } from "@shopify/polaris-icons";
 import { useNavigate } from "react-router";
+
+import cornerList from "../assets/corner_list_disabled.svg";
+import cornerListSelected from "../assets/corner_list.svg";
+import columnList from "../assets/2column_list_disabled.svg";
+import columnListSelected from "../assets/2column_list.svg";
+import horizontalList from "../assets/horizontal_list_disabled.svg";
+import horizontalListSelected from "../assets/horizontal_list.svg";
+import simpleList from "../assets/simple_list_disabled.svg";
+import simpleListSelected from "../assets/simple_list.svg";
+
 import {
     Page,
     Card,
@@ -23,6 +33,7 @@ import {
     Checkbox,
     Tooltip,
     DatePicker,
+    RangeSlider
 } from "@shopify/polaris";
 
 import {
@@ -267,6 +278,76 @@ const openCollectionPicker = async () => {
     const [differentVariants, setDifferentVariants] = useState(false);
     const [showVariantSelection, setShowVariantSelection] = useState(false);
     const [hideThemeVariantPicker, setHideThemeVariantPicker] = useState(false);
+
+    const [selectedLayout, setSelectedLayout] = useState('corner');
+
+    useEffect(() => {
+        const images = [
+            cornerList,
+            cornerListSelected,
+            horizontalList,
+            horizontalListSelected,
+            columnList,
+            columnListSelected,
+            simpleList,
+            simpleListSelected,
+        ];
+
+        images.forEach((src) => {
+            const img = new Image();
+            img.src = src;
+        });
+    }, []);
+
+    const LayoutButton = ({
+        layout,
+        normalImage,
+        selectedImage,
+        label,
+    }) => (
+        <div
+            style={{
+                // border: `2px solid ${
+                //     selectedLayout === layout ? '#008060' : '#d1d1d1'
+                // }`,
+                background: 'linear-gradient(rgb(255, 255, 255) 0%, rgba(97, 121, 133, 0.04) 100%)',
+                boxShadow: `${
+                    selectedLayout === layout
+                        ? 'rgb(0, 128, 96) 0px 0px 0px 2px inset'
+                        : 'rgb(196, 205, 213) 0px 0px 0px 1px inset'
+                }`,
+                marginLeft: '-1px',
+                boxSizing: 'border-box',              
+                display: 'inline-flex',
+                overflow: 'hidden',
+                padding:'5px'
+            }}
+        >
+            <Button
+                variant="plain"
+                accessibilityLabel={label}
+                onClick={() => setSelectedLayout(layout)}
+                style={{
+                    padding: 0,
+                    margin: 0,
+                }}
+            >
+                <img
+                    src={
+                        selectedLayout === layout
+                            ? selectedImage
+                            : normalImage
+                    }
+                    alt={label}
+                    style={{
+                        display: 'block',
+                        width:'100%',                      
+                        objectFit: 'contain',                        
+                    }}
+                />
+            </Button>
+        </div>
+    );
 
     return (
         <>
@@ -953,14 +1034,113 @@ const openCollectionPicker = async () => {
                                     open={styleOpen}
                                     setOpen={setStyleOpen}
                                 >
-                                    <Text as="p">
-                                        Style configuration goes here.
-                                    </Text>
+                                
+                                    <div
+                                        style={{
+                                            display: 'grid',
+                                            gridTemplateColumns: 'repeat(4, 1fr)',
+                                            width: '100%',
+                                            gap: 0,
+                                            padding: '20px',
+                                            boxSizing: 'border-box'        
+                                        }}
+                                    >
+                                        <LayoutButton
+                                            layout="corner"
+                                            normalImage={cornerList}
+                                            selectedImage={cornerListSelected}
+                                            label="Corner List"
+                                            position={0}
+                                        />
+
+                                        <LayoutButton
+                                            layout="horizontal"
+                                            normalImage={horizontalList}
+                                            selectedImage={horizontalListSelected}
+                                            label="Horizontal List"
+                                            position={1}
+                                        />
+
+                                        <LayoutButton
+                                            layout="column"
+                                            normalImage={columnList}
+                                            selectedImage={columnListSelected}
+                                            label="Column List"
+                                            position={2}
+                                        />
+
+                                        <LayoutButton
+                                            layout="simple"
+                                            normalImage={simpleList}
+                                            selectedImage={simpleListSelected}
+                                            label="Simple List"
+                                            position={3}
+                                        />
+                                    </div> 
+
+                                    <BlockStack gap="400">
+                                        <InlineStack gap="600" blockAlign="center" wrap={false}>
+                                            {/* Range 1 */}
+                                            <div style={{ flex: 1 }}>
+                                                <InlineStack gap="300" blockAlign="center" wrap={false}>
+                                                    <div style={{ flex: 1 }}>
+                                                        <RangeSlider
+                                                            label="Corner radius"
+                                                            value={50}
+                                                            min={0}
+                                                            max={100}
+                                                            step={1}
+                                                            onChange=""
+                                                        />
+                                                    </div>
+
+                                                    <div style={{ width: '70px' }}>
+                                                        <TextField
+                                                            label=""
+                                                            type="text"
+                                                            value={50}
+                                                            onChange=""
+                                                            autoComplete="off"
+                                                            suffix="px"
+                                                        />
+                                                    </div>
+                                                </InlineStack>
+                                            </div>
+
+                                            {/* Range 2 */}
+                                            <div style={{ flex: 1 }}>
+                                                <InlineStack gap="300" blockAlign="center" wrap={false}>
+                                                    <div style={{ flex: 1 }}>
+                                                        <RangeSlider
+                                                            label="Spacing"
+                                                            value={50}
+                                                            min={0}
+                                                            max={100}
+                                                            step={1}
+                                                            onChange=""
+                                                        />
+                                                    </div>
+
+                                                    <div style={{ width: '70px' }}>
+                                                        <TextField
+                                                            label=""
+                                                            type="text"
+                                                            value="50"
+                                                            onChange={() => {}}
+                                                            autoComplete="off"
+                                                            suffix="px"
+                                                        />
+                                                    </div>
+                                                </InlineStack>
+                                            </div>
+                                        </InlineStack>
+                                    </BlockStack>  
+
                                 </CollapsibleCard>
                             </BlockStack>
                         </Box>
                     </Card>
-                </InlineGrid>
+                </InlineGrid>   
             </Page>
         </>
     );

@@ -20,3 +20,14 @@ use_legacy_install_flow = false
 
 [auth]
 redirect_urls = [ "https://example.com/api/auth" ]
+
+# DELETE THESE LINES IF YOU ARE NOT USING EVENTS
+[events]
+api_version = "unstable" 
+
+# or
+[[events.subscription]]
+handle = "product-events"
+topic = "Product"
+actions = ["create", "update", "delete"]
+uri = "/events/products"
