@@ -5,6 +5,8 @@ import { TitleBar, useAppBridge, SaveBar } from "@shopify/app-bridge-react";
 import { ImageIcon } from "@shopify/polaris-icons";
 import { useNavigate } from "react-router";
 
+import ColorPickerField from "../components/common/ColorPickerField";
+
 import cornerList from "../assets/corner_list_disabled.svg";
 import cornerListSelected from "../assets/corner_list.svg";
 import columnList from "../assets/2column_list_disabled.svg";
@@ -33,7 +35,7 @@ import {
     Checkbox,
     Tooltip,
     DatePicker,
-    RangeSlider
+    RangeSlider  
 } from "@shopify/polaris";
 
 import {
@@ -281,6 +283,18 @@ const openCollectionPicker = async () => {
 
     const [selectedLayout, setSelectedLayout] = useState('corner');
 
+    const [cornerRadius, setCornerRadius] = useState(10);
+    const [spacing, setSpacing] = useState(20);
+
+    const [cardBgColor, setCardBgColor] = useState("#ffffff");
+    const [cardBgColorTransparency, setCardBgColorTransparency] = useState(100);
+    const [selectedBgColor, setSelectedBgColor] = useState("#000000");
+    const [selectedBgColorTransparency, setSelectedBgColorTransparency] = useState(100);
+    const [borderColor, setBorderColor] = useState("#cccccc");
+    const [borderColorTransparency, setBorderColorTransparency] = useState(100);
+    const [blockTitleColor, setBlockTitleColor] = useState("#cccccc");
+    const [blockTitleColorTransparency, setBlockTitleColorTransparency] = useState(100);
+  
     useEffect(() => {
         const images = [
             cornerList,
@@ -1034,63 +1048,63 @@ const openCollectionPicker = async () => {
                                     open={styleOpen}
                                     setOpen={setStyleOpen}
                                 >
-                                
-                                    <div
-                                        style={{
-                                            display: 'grid',
-                                            gridTemplateColumns: 'repeat(4, 1fr)',
-                                            width: '100%',
-                                            gap: 0,
-                                            padding: '20px',
-                                            boxSizing: 'border-box'        
-                                        }}
-                                    >
-                                        <LayoutButton
-                                            layout="corner"
-                                            normalImage={cornerList}
-                                            selectedImage={cornerListSelected}
-                                            label="Corner List"
-                                            position={0}
-                                        />
-
-                                        <LayoutButton
-                                            layout="horizontal"
-                                            normalImage={horizontalList}
-                                            selectedImage={horizontalListSelected}
-                                            label="Horizontal List"
-                                            position={1}
-                                        />
-
-                                        <LayoutButton
-                                            layout="column"
-                                            normalImage={columnList}
-                                            selectedImage={columnListSelected}
-                                            label="Column List"
-                                            position={2}
-                                        />
-
-                                        <LayoutButton
-                                            layout="simple"
-                                            normalImage={simpleList}
-                                            selectedImage={simpleListSelected}
-                                            label="Simple List"
-                                            position={3}
-                                        />
-                                    </div> 
-
                                     <BlockStack gap="400">
+                                        <div
+                                            style={{
+                                                display: 'grid',
+                                                gridTemplateColumns: 'repeat(4, 1fr)',
+                                                width: '100%',
+                                                gap: 0,
+                                                padding: '20px',
+                                                boxSizing: 'border-box'        
+                                            }}
+                                        >
+                                            <LayoutButton
+                                                layout="corner"
+                                                normalImage={cornerList}
+                                                selectedImage={cornerListSelected}
+                                                label="Corner List"
+                                                position={0}
+                                            />
+
+                                            <LayoutButton
+                                                layout="horizontal"
+                                                normalImage={horizontalList}
+                                                selectedImage={horizontalListSelected}
+                                                label="Horizontal List"
+                                                position={1}
+                                            />
+
+                                            <LayoutButton
+                                                layout="column"
+                                                normalImage={columnList}
+                                                selectedImage={columnListSelected}
+                                                label="Column List"
+                                                position={2}
+                                            />
+
+                                            <LayoutButton
+                                                layout="simple"
+                                                normalImage={simpleList}
+                                                selectedImage={simpleListSelected}
+                                                label="Simple List"
+                                                position={3}
+                                            />
+                                        </div> 
+
+                                        
                                         <InlineStack gap="600" blockAlign="center" wrap={false}>
                                             {/* Range 1 */}
                                             <div style={{ flex: 1 }}>
-                                                <InlineStack gap="300" blockAlign="center" wrap={false}>
+                                                <InlineStack gap="300" blockAlign="end" wrap={false}>
                                                     <div style={{ flex: 1 }}>
                                                         <RangeSlider
                                                             label="Corner radius"
-                                                            value={50}
+                                                            value={cornerRadius}
                                                             min={0}
-                                                            max={100}
+                                                            max={40}
                                                             step={1}
-                                                            onChange=""
+                                                            onChange={setCornerRadius}
                                                         />
                                                     </div>
 
@@ -1098,8 +1112,8 @@ const openCollectionPicker = async () => {
                                                         <TextField
                                                             label=""
                                                             type="text"
-                                                            value={50}
-                                                            onChange=""
+                                                            value={String(cornerRadius)}
+                                                            onChange={(value) => setCornerRadius(Number(value))}
                                                             autoComplete="off"
                                                             suffix="px"
                                                         />
@@ -1109,15 +1123,15 @@ const openCollectionPicker = async () => {
 
                                             {/* Range 2 */}
                                             <div style={{ flex: 1 }}>
-                                                <InlineStack gap="300" blockAlign="center" wrap={false}>
+                                                <InlineStack gap="300" blockAlign="end" wrap={false}>
                                                     <div style={{ flex: 1 }}>
                                                         <RangeSlider
                                                             label="Spacing"
-                                                            value={50}
+                                                            value={spacing}
                                                             min={0}
-                                                            max={100}
-                                                            step={1}
-                                                            onChange=""
+                                                            max={2}
+                                                            step={0.05}
+                                                            onChange={setSpacing}
                                                         />
                                                     </div>
 
@@ -1125,8 +1139,8 @@ const openCollectionPicker = async () => {
                                                         <TextField
                                                             label=""
                                                             type="text"
-                                                            value="50"
-                                                            onChange={() => {}}
+                                                            value={String(spacing)}
+                                                            onChange={(value) => setSpacing(Number(value))}
                                                             autoComplete="off"
                                                             suffix="px"
                                                         />
@@ -1134,7 +1148,59 @@ const openCollectionPicker = async () => {
                                                 </InlineStack>
                                             </div>
                                         </InlineStack>
-                                    </BlockStack>  
+                                    </BlockStack> 
+
+                                    <div style={{ margin: "20px 0" }}>
+                                        <Divider />
+                                    </div>
+
+                                    <BlockStack gap="400">
+                                        <Text as="h2" variant="headingMd">
+                                            Colors
+                                        </Text>
+
+                                        <Text as="h3" variant="headingSm">
+                                            General
+                                        </Text>
+
+                                        <InlineStack gap="400">
+                                            <ColorPickerField
+                                                label="Card Bg Color"
+                                                value={cardBgColor}
+                                                transparency={cardBgColorTransparency}
+                                                onChange={setCardBgColor}
+                                                onTransparencyChange={setCardBgColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Selected Bg Color"
+                                                value={selectedBgColor}
+                                                transparency={selectedBgColorTransparency}
+                                                onChange={setSelectedBgColor}
+                                                onTransparencyChange={setSelectedBgColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Border color"
+                                                value={borderColor}
+                                                transparency={borderColorTransparency}
+                                                onChange={setBorderColor}
+                                                onTransparencyChange={setBorderColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Block title color"
+                                                value={blockTitleColor}
+                                                transparency={blockTitleColorTransparency}
+                                                onChange={setBlockTitleColor}
+                                                onTransparencyChange={setBlockTitleColorTransparency}
+                                            />
+                                        </InlineStack>
+                                    </BlockStack> 
+
+                                    <div style={{ margin: "20px 0" }}>
+                                        <Divider />
+                                    </div>
 
                                 </CollapsibleCard>
                             </BlockStack>
