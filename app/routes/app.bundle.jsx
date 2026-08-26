@@ -1165,7 +1165,7 @@ const openCollectionPicker = async () => {
 
                                         <InlineStack gap="400">
                                             <ColorPickerField
-                                                label="Card Bg Color"
+                                                label="Card bg color"
                                                 value={cardBgColor}
                                                 transparency={cardBgColorTransparency}
                                                 onChange={setCardBgColor}
@@ -1173,7 +1173,7 @@ const openCollectionPicker = async () => {
                                             />
 
                                             <ColorPickerField
-                                                label="Selected Bg Color"
+                                                label="Selected bg color"
                                                 value={selectedBgColor}
                                                 transparency={selectedBgColorTransparency}
                                                 onChange={setSelectedBgColor}

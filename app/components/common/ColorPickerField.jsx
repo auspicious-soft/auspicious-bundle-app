@@ -285,11 +285,13 @@ export default function ColorPickerField({
             >
                 <span
                     style={{
-                        fontSize: "14px",
+                        display: "inline-block",
+                        fontSize: "13px",
                         fontWeight: 500,
-                        width: "50px",
+                        width: "70px",
                         whiteSpace: "normal",
-                        wordBreak: "break-word",
+                        overflowWrap: "break-word",
+                        lineHeight: "20px",
                     }}
                 >
                     {label}
@@ -310,9 +312,9 @@ export default function ColorPickerField({
                             )
                         }
                         style={{
-                            width: "70px",
+                            width: "95px",
                             height: "30px",
-                            padding: "4px 8px",
+                            padding: "4px 25px",
                             border:
                                 "1px solid #c9cccf",
                             borderRadius: "6px",
