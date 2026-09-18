@@ -288,7 +288,7 @@ export default function ColorPickerField({
                         display: "inline-block",
                         fontSize: "13px",
                         fontWeight: 500,
-                        width: "70px",
+                        width: "85px",
                         whiteSpace: "normal",
                         overflowWrap: "break-word",
                         lineHeight: "20px",

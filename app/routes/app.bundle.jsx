@@ -294,7 +294,36 @@ const openCollectionPicker = async () => {
     const [borderColorTransparency, setBorderColorTransparency] = useState(100);
     const [blockTitleColor, setBlockTitleColor] = useState("#cccccc");
     const [blockTitleColorTransparency, setBlockTitleColorTransparency] = useState(100);
+    const [barTitleColor, setBarTitleColor] = useState("#ffffff");
+    const [barTitleColorTransparency, setBarTitleColorTransparency] = useState(100);
+    const [barSubtitleColor, setBarSubtitleColor] = useState("#000000");
+    const [barSubtitleColorTransparency, setBarSubtitleColorTransparency] = useState(100);
+    const [barPriceColor, setBarPriceColor] = useState("#cccccc");
+    const [barPriceColorTransparency, setBarPriceColorTransparency] = useState(100);
+    const [barFullPriceColor, setBarFullPriceColor] = useState("#cccccc");
+    const [barFullPriceColorTransparency, setBarFullPriceColorTransparency] = useState(100);
+    const [labelBgColor, setLabelBgColor] = useState("#cccccc");
+    const [labelBgColorTransparency, setLabelBgColorTransparency] = useState(100);
+    const [labelTextColor, setLabelTextColor] = useState("#cccccc");
+    const [labelTextColorTransparency, setLabelTextColorTransparency] = useState(100);
+    const [freeGiftBgColor, setFreeGiftBgColor] = useState("#ffffff");
+    const [freeGiftBgColorTransparency, setFreeGiftBgColorTransparency] = useState(100);
+    const [freeGiftTextColor, setFreeGiftTextColor] = useState("#000000");
+    const [freeGiftTextColorTransparency, setFreeGiftTextColorTransparency] = useState(100);
+    const [freeGiftSelectedBgColor, setFreeGiftSelectedBgColor] = useState("#cccccc");
+    const [freeGiftSelectedBgColorTransparency, setFreeGiftSelectedBgColorTransparency] = useState(100);
+    const [freeGiftSelectedTextColor, setFreeGiftSelectedTextColor] = useState("#cccccc");
+    const [freeGiftSelectedTextColorTransparency, setFreeGiftSelectedTextColorTransparency] = useState(100);
   
+    
+    const [selected, setSelected] = useState('option1');
+
+    const options = [
+        {label: 'Option 1', value: 'option1'},
+        {label: 'Option 2', value: 'option2'},
+        {label: 'Option 3', value: 'option3'},
+    ];    
+    
     useEffect(() => {
         const images = [
             cornerList,
@@ -393,39 +422,45 @@ const openCollectionPicker = async () => {
                     gap="500"
                 >
                     {/* LEFT COLUMN */}
-                    <Card>
-                        <BlockStack gap="300">
-                            <InlineStack
-                                gap="300"
-                                blockAlign="center"
-                            >
-                                <Button
-                                    icon={ArrowLeftIcon}
-                                    variant="tertiary"
-                                    onClick={() => navigate(-1)}
-                                />
 
-                                <Text
-                                    as="h2"
-                                    variant="headingMd"
+                    <div
+                        style={{
+                            position: "sticky",
+                            top: "20px",
+                            alignSelf: "start",
+                        }}
+                    >
+                        <Card className="sticky-left-column">
+                            <BlockStack gap="300">
+                                <InlineStack
+                                    gap="300"
+                                    blockAlign="center"
                                 >
-                                    Preview
+                                    <Button
+                                        icon={ArrowLeftIcon}
+                                        variant="tertiary"
+                                        onClick={() => navigate(-1)}
+                                    />
+
+                                    <Text
+                                        as="h2"
+                                        variant="headingMd"
+                                    >
+                                        Preview
+                                    </Text>
+                                </InlineStack>
+
+
+                                <Text>
+                                    Template: {templateSlug || "-"}
                                 </Text>
-                            </InlineStack>
 
-
-                            <Text>
-                                Template: {templateSlug || "-"}
-                            </Text>
-
-                            <Text>
-                                Color Scheme: {colorSchemeId || "-"}
-                            </Text>
-                        </BlockStack>
-                    </Card>
-
-
-
+                                <Text>
+                                    Color Scheme: {colorSchemeId || "-"}
+                                </Text>
+                            </BlockStack>
+                        </Card>
+                    </div>
 
                     {/* RIGHT COLUMN */}
 
@@ -1154,7 +1189,7 @@ const openCollectionPicker = async () => {
                                         <Divider />
                                     </div>
 
-                                    <BlockStack gap="400">
+                                    <BlockStack gap="200">
                                         <Text as="h2" variant="headingMd">
                                             Colors
                                         </Text>
@@ -1165,7 +1200,7 @@ const openCollectionPicker = async () => {
 
                                         <InlineStack gap="400">
                                             <ColorPickerField
-                                                label="Card bg color"
+                                                label="Card bg"
                                                 value={cardBgColor}
                                                 transparency={cardBgColorTransparency}
                                                 onChange={setCardBgColor}
@@ -1173,7 +1208,7 @@ const openCollectionPicker = async () => {
                                             />
 
                                             <ColorPickerField
-                                                label="Selected bg color"
+                                                label="Selected bg"
                                                 value={selectedBgColor}
                                                 transparency={selectedBgColorTransparency}
                                                 onChange={setSelectedBgColor}
@@ -1181,7 +1216,7 @@ const openCollectionPicker = async () => {
                                             />
 
                                             <ColorPickerField
-                                                label="Border color"
+                                                label="Border"
                                                 value={borderColor}
                                                 transparency={borderColorTransparency}
                                                 onChange={setBorderColor}
@@ -1189,7 +1224,7 @@ const openCollectionPicker = async () => {
                                             />
 
                                             <ColorPickerField
-                                                label="Block title color"
+                                                label="Block title"
                                                 value={blockTitleColor}
                                                 transparency={blockTitleColorTransparency}
                                                 onChange={setBlockTitleColor}
@@ -1198,7 +1233,394 @@ const openCollectionPicker = async () => {
                                         </InlineStack>
                                     </BlockStack> 
 
-                                    <div style={{ margin: "20px 0" }}>
+                                    <div style={{ margin: "10px 0" }}>
+                                        <Divider />
+                                    </div>
+
+                                    <BlockStack gap="200">                                        
+
+                                        <Text as="h3" variant="headingSm">
+                                            Bar text colors
+                                        </Text>
+
+                                        <InlineStack gap="400">
+                                            <ColorPickerField
+                                                label="Title"
+                                                value={barTitleColor}
+                                                transparency={barTitleColorTransparency}
+                                                onChange={setBarTitleColor}
+                                                onTransparencyChange={setBarTitleColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Subtitle"
+                                                value={barSubtitleColor}
+                                                transparency={barSubtitleColorTransparency}
+                                                onChange={setBarSubtitleColor}
+                                                onTransparencyChange={setBarSubtitleColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Price"
+                                                value={barPriceColor}
+                                                transparency={barPriceColorTransparency}
+                                                onChange={setBarPriceColor}
+                                                onTransparencyChange={setBarPriceColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Full price"
+                                                value={barFullPriceColor}
+                                                transparency={barFullPriceColorTransparency}
+                                                onChange={setBarFullPriceColor}
+                                                onTransparencyChange={setBarFullPriceColorTransparency}
+                                            />
+                                        </InlineStack>
+                                    </BlockStack>
+
+                                    <div style={{ margin: "10px 0" }}>
+                                        <Divider />
+                                    </div>
+
+                                    <BlockStack gap="200">                                        
+
+                                        <Text as="h3" variant="headingSm">
+                                            Label colors
+                                        </Text>
+
+                                        <InlineStack gap="400">
+                                            <ColorPickerField
+                                                label="Background"
+                                                value={labelBgColor}
+                                                transparency={labelBgColorTransparency}
+                                                onChange={setLabelBgColor}
+                                                onTransparencyChange={setLabelBgColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Text"
+                                                value={labelTextColor}
+                                                transparency={labelTextColorTransparency}
+                                                onChange={setLabelTextColor}
+                                                onTransparencyChange={setLabelTextColorTransparency}
+                                            />                                            
+                                        </InlineStack>
+                                    </BlockStack>
+
+                                    <div style={{ margin: "10px 0" }}>
+                                        <Divider />
+                                    </div>
+
+                                    <BlockStack gap="200">                                        
+
+                                        <Text as="h3" variant="headingSm">
+                                            Free Gift colors
+                                        </Text>
+
+                                        <InlineStack gap="400">
+                                            <ColorPickerField
+                                                label="Background"
+                                                value={freeGiftBgColor}
+                                                transparency={freeGiftBgColorTransparency}
+                                                onChange={setFreeGiftBgColor}
+                                                onTransparencyChange={setFreeGiftBgColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Text"
+                                                value={freeGiftTextColor}
+                                                transparency={freeGiftTextColorTransparency}
+                                                onChange={setFreeGiftTextColor}
+                                                onTransparencyChange={setFreeGiftTextColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Selected BG"
+                                                value={freeGiftSelectedBgColor}
+                                                transparency={freeGiftSelectedBgColorTransparency}
+                                                onChange={setFreeGiftSelectedBgColor}
+                                                onTransparencyChange={setFreeGiftSelectedBgColorTransparency}
+                                            />
+
+                                            <ColorPickerField
+                                                label="Selected text"
+                                                value={freeGiftSelectedTextColor}
+                                                transparency={freeGiftSelectedTextColorTransparency}
+                                                onChange={setFreeGiftSelectedTextColor}
+                                                onTransparencyChange={setFreeGiftSelectedTextColorTransparency}
+                                            />
+                                        </InlineStack>
+                                    </BlockStack>
+
+                                    <div style={{ margin: "10px 0" }}>
+                                        <Divider />
+                                    </div>                             
+
+                                    <BlockStack gap="200"> 
+                                        <Text as="h3" variant="headingSm">
+                                            Typography
+                                        </Text>
+
+                                        <InlineStack gap="400">
+                                            <BlockStack gap="200">
+                                                <Text as="h3" variant="headingSm">
+                                                    Block title
+                                                </Text>                                        
+
+                                                <InlineStack gap="400">                                      
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+
+                                                        <TextField
+                                                            label="Font size"
+                                                            type="number"
+                                                            value="1"
+                                                            onChange=""
+                                                            min={1}
+                                                            max={100}
+                                                            step={1}
+                                                            autoComplete="off"
+                                                            suffix="px"
+                                                        />
+                                                    </div>
+
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+                                                        <Select
+                                                            label="Font style"
+                                                            options={options}
+                                                            value={selected}
+                                                            onChange={setSelected}
+                                                        />
+                                                    </div> 
+                                                </InlineStack> 
+                                            </BlockStack>
+                                    
+                                            <BlockStack gap="200">
+                                                <Text as="h3" variant="headingSm">
+                                                    Title
+                                                </Text>
+
+                                                <InlineStack gap="400">                                      
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+
+                                                        <TextField
+                                                            label="Font size"
+                                                            type="number"
+                                                            value="1"
+                                                            onChange=""
+                                                            min={1}
+                                                            max={100}
+                                                            step={1}
+                                                            autoComplete="off"
+                                                            suffix="px"
+                                                        />
+                                                    </div>
+
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+                                                        <Select
+                                                            label="Font style"
+                                                            options={options}
+                                                            value={selected}
+                                                            onChange={setSelected}
+                                                        />
+                                                    </div> 
+                                                </InlineStack> 
+                                            </BlockStack> 
+                                        </InlineStack>
+                                    </BlockStack>
+
+                                    <div style={{ margin: "10px 0" }}>
+                                        <Divider />
+                                    </div>
+
+                                    <BlockStack gap="200">
+                                        <InlineStack gap="400">
+                                            <BlockStack gap="200">
+                                                <Text as="h3" variant="headingSm">
+                                                    Sub title
+                                                </Text>                                        
+
+                                                <InlineStack gap="400">                                      
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+
+                                                        <TextField
+                                                            label="Font size"
+                                                            type="number"
+                                                            value="1"
+                                                            onChange=""
+                                                            min={1}
+                                                            max={100}
+                                                            step={1}
+                                                            autoComplete="off"
+                                                            suffix="px"
+                                                        />
+                                                    </div>
+
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+                                                        <Select
+                                                            label="Font style"
+                                                            options={options}
+                                                            value={selected}
+                                                            onChange={setSelected}
+                                                        />
+                                                    </div> 
+                                                </InlineStack> 
+                                            </BlockStack>
+                                    
+                                            <BlockStack gap="200">
+                                                <Text as="h3" variant="headingSm">
+                                                    Label
+                                                </Text>
+
+                                                <InlineStack gap="400">                                      
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+
+                                                        <TextField
+                                                            label="Font size"
+                                                            type="number"
+                                                            value="1"
+                                                            onChange=""
+                                                            min={1}
+                                                            max={100}
+                                                            step={1}
+                                                            autoComplete="off"
+                                                            suffix="px"
+                                                        />
+                                                    </div>
+
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+                                                        <Select
+                                                            label="Font style"
+                                                            options={options}
+                                                            value={selected}
+                                                            onChange={setSelected}
+                                                        />
+                                                    </div> 
+                                                </InlineStack> 
+                                            </BlockStack> 
+                                        </InlineStack>
+                                    </BlockStack>
+
+                                    <div style={{ margin: "10px 0" }}>
+                                        <Divider />
+                                    </div>
+
+                                    <BlockStack gap="200">
+                                        <InlineStack gap="400">
+                                            <BlockStack gap="200">
+                                                <Text as="h3" variant="headingSm">
+                                                    Free Gift
+                                                </Text>                                        
+
+                                                <InlineStack gap="400">                                      
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+
+                                                        <TextField
+                                                            label="Font size"
+                                                            type="number"
+                                                            value="1"
+                                                            onChange=""
+                                                            min={1}
+                                                            max={100}
+                                                            step={1}
+                                                            autoComplete="off"
+                                                            suffix="px"
+                                                        />
+                                                    </div>
+
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+                                                        <Select
+                                                            label="Font style"
+                                                            options={options}
+                                                            value={selected}
+                                                            onChange={setSelected}
+                                                        />
+                                                    </div> 
+                                                </InlineStack> 
+                                            </BlockStack>
+                                    
+                                            <BlockStack gap="200">
+                                                <Text as="h3" variant="headingSm">
+                                                    Unit Label
+                                                </Text>
+
+                                                <InlineStack gap="400">                                      
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+
+                                                        <TextField
+                                                            label="Font size"
+                                                            type="number"
+                                                            value="1"
+                                                            onChange=""
+                                                            min={1}
+                                                            max={100}
+                                                            step={1}
+                                                            autoComplete="off"
+                                                            suffix="px"
+                                                        />
+                                                    </div>
+
+                                                    <div
+                                                        style={{
+                                                            width: "95px",        
+                                                        }}
+                                                    >
+                                                        <Select
+                                                            label="Font style"
+                                                            options={options}
+                                                            value={selected}
+                                                            onChange={setSelected}
+                                                        />
+                                                    </div> 
+                                                </InlineStack> 
+                                            </BlockStack> 
+                                        </InlineStack>
+                                    </BlockStack>
+
+                                    <div style={{ margin: "10px 0" }}>
                                         <Divider />
                                     </div>
 

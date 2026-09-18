@@ -30,4 +30,5 @@ api_version = "unstable"
 handle = "product-events"
 topic = "Product"
 actions = ["create", "update", "delete"]
+triggers = ["product.*"]
 uri = "/events/products"
